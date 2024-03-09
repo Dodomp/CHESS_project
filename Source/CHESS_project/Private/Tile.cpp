@@ -57,6 +57,21 @@ FVector2D ATile::GetGridPosition()
 	return TileGridPosition;
 }
 
+UStaticMeshComponent* ATile::GetStaticMeshComponent()
+{
+	return StaticMeshComponent;
+}
+
+//UMaterialInterface* ATile::GetMaterialWhite()
+//{
+	//return MaterialWhite;
+//}
+
+//UMaterialInterface* ATile::GetMaterialBlack()
+//{
+	//return MaterialBlack;
+//}
+
 // Called when the game starts or when spawned
 void ATile::BeginPlay()
 {

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/MeshComponent.h"
 #include "Tile.generated.h"
 
 
@@ -42,8 +43,8 @@ public:
 	// get the (x, y) position
 	FVector2D GetGridPosition();
 
+	UStaticMeshComponent* GetStaticMeshComponent();
 
-protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -52,6 +53,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 		UStaticMeshComponent* StaticMeshComponent;
+
+//protected:
+
+	
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		ETileStatus Status;
@@ -64,8 +69,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FVector2D TileGridPosition;
 
+	
 
-public:	
+
+
+
+//public:	
 	// Called every frame
 	//virtual void Tick(float DeltaTime) override;
 
