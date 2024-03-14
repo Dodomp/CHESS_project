@@ -15,6 +15,29 @@ public:
 	// Sets default values for this pawn's properties
 	ABasePiece();
 
+	int32 GetPlayerOwner();
+
+	FVector2D GetGridPosition();
+
+	void SetGridPosition(const double InX, const double InY);
+
+	void SetPlayerOwner(const int32 TileOwner);
+
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		USceneComponent* Scene;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+		UStaticMeshComponent* StaticMeshComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		int32 PlayerOwner;
+
+	// (x, y) position of the tile
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		FVector2D PieceGridPosition;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

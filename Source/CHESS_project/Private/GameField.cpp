@@ -14,6 +14,8 @@ AGameField::AGameField()
 	//Dimensions of field
 	Size = 8;
 	TileSize = 120;
+	PieceSize = 120;
+
 
 
 }
@@ -54,6 +56,7 @@ void AGameField::GenerateField()
 		{
 			FVector Location = AGameField::GetRelativeLocationByXYPosition(x, y);
 			ATile* Obj;
+			ABasePiece* Piece;
 			if (((x + y) % 2) == 0) {
 				Obj = GetWorld()->SpawnActor<ATile>(TileClassBlack, Location, FRotator::ZeroRotator);
 			}
@@ -66,6 +69,9 @@ void AGameField::GenerateField()
 				Obj->SetGridPosition(x, y);
 				TileArray.Add(Obj);
 				TileMap.Add(FVector2D(x, y), Obj);
+			}
+			if (x == 0 && y == 0) {
+				Piece = GetWorld()->SpawnActor<ABasePiece>(PawnClassWhite, Location, FRotator::ZeroRotator);
 			}
 		}
 	}

@@ -5,6 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "Tile.h"
+#include "BasePiece.h"
 #include "GameFramework/Actor.h"
 #include "GameField.generated.h"
 
@@ -38,7 +39,7 @@ public:
 	// size of field
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		int32 Size;
-
+	
 
 
 	// TSubclassOf template class that provides UClass type safety
@@ -48,10 +49,16 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<ATile> TileClassWhite;
 
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<ABasePiece> PawnClassWhite;
+
 
 	// tile size
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 		float TileSize;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+		float PieceSize;
 
 
 	// Sets default values for this actor's properties
