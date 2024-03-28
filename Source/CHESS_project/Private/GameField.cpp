@@ -70,7 +70,7 @@ void AGameField::GenerateField()
 				TileArray.Add(Obj);
 				TileMap.Add(FVector2D(x, y), Obj);
 			}
-			if (x == 0 && y == 0) {
+			if (x == 0 && y == 1) {
 				Piece = GetWorld()->SpawnActor<ABasePiece>(PawnClassWhite, Location, FRotator::ZeroRotator);
 			}
 		}
