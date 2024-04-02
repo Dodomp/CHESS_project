@@ -70,8 +70,8 @@ void AGameField::GenerateField()
 				TileArray.Add(Obj);
 				TileMap.Add(FVector2D(x, y), Obj);
 			}
-			if (x == 0 && y == 1) {
-				Piece = GetWorld()->SpawnActor<ABasePiece>(PawnClassWhite, Location, FRotator::ZeroRotator);
+			if (x == 1 && y == 0) {
+				Piece = GetWorld()->SpawnActor<ABasePiece>(PawnClassWhite, Location, FRotator(0.0f, 90.0f, 0.00f));
 			}
 		}
 	}

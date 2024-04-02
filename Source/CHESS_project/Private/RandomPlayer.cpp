@@ -32,3 +32,15 @@ void ARandomPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 }
 
+void ARandomPlayer::OnTurn()
+{
+}
+
+void ARandomPlayer::OnWin()
+{
+}
+
+void ARandomPlayer::OnLose()
+{
+}
+

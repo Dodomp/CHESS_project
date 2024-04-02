@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "CHESS_PlayerInterface.h"
 #include "RandomPlayer.generated.h"
 
 UCLASS()
-class CHESS_PROJECT_API ARandomPlayer : public APawn
+class CHESS_PROJECT_API ARandomPlayer : public APawn, public ICHESS_PlayerInterface
 {
 	GENERATED_BODY()
 
@@ -25,5 +26,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual void OnTurn() override;
+	virtual void OnWin() override;
+	virtual void OnLose() override;
 
 };
