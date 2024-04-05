@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-//#include "TTT_GameInstance.h"
+#include "CHESS_GameInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Chess_PlayerInterface.h"
@@ -23,7 +23,7 @@ public:
 	UCameraComponent* Camera;
 
 	// game instance reference
-	//UTTT_GameInstance* GameInstance;
+	UCHESS_GameInstance* GameInstance;
 
 protected:
 	// Called when the game starts or when spawned

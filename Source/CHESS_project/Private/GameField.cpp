@@ -3,6 +3,7 @@
 
 #include "GameField.h"
 #include "Kismet/GameplayStatics.h"
+#include <ThePawn.h>
 
 
 // Sets default values
@@ -56,7 +57,7 @@ void AGameField::GenerateField()
 		{
 			FVector Location = AGameField::GetRelativeLocationByXYPosition(x, y);
 			ATile* Obj;
-			ABasePiece* Piece;
+			AThePawn* Pawn;
 			if (((x + y) % 2) == 0) {
 				Obj = GetWorld()->SpawnActor<ATile>(TileClassBlack, Location, FRotator::ZeroRotator);
 			}
@@ -71,7 +72,7 @@ void AGameField::GenerateField()
 				TileMap.Add(FVector2D(x, y), Obj);
 			}
 			if (x == 1 && y == 0) {
-				Piece = GetWorld()->SpawnActor<ABasePiece>(PawnClassWhite, Location, FRotator(0.0f, 90.0f, 0.00f));
+				Pawn = GetWorld()->SpawnActor<AThePawn>(ThePawnClassWhite, Location, FRotator(0.0f, 90.0f, 0.00f));
 			}
 		}
 	}

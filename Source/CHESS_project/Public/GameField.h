@@ -5,7 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "Tile.h"
-#include "BasePiece.h"
+#include "ThePawn.h"
 #include "GameFramework/Actor.h"
 #include "GameField.generated.h"
 
@@ -50,7 +50,7 @@ public:
 		TSubclassOf<ATile> TileClassWhite;
 
 	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<ABasePiece> PawnClassWhite;
+		TSubclassOf<AThePawn> ThePawnClassWhite;
 
 
 	// tile size

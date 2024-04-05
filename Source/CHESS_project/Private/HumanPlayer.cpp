@@ -3,10 +3,10 @@
 
 #include "HumanPlayer.h"
 #include "GameField.h"
-//#include "TTT_GameMode.h"
+#include "CHESS_GameMode.h"
 #include "Components/InputComponent.h"
-//#include "EnhancedInputComponent.h"
-//#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 
 
 
@@ -22,14 +22,13 @@ AHumanPlayer::AHumanPlayer()
 	//set the camera as RootComponent
 	//SetRootComponent(Camera);
 	// get the game instance reference
-	//GameInstance = Cast<UTTT_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	GameInstance = Cast<UCHESS_GameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	// default init values
 	PlayerNumber = -1;
 	Color = EColor::NotDefined;
 
 }
-
-// Called when the game starts or when spawned
+//Called when the game starts or when spawned
 void AHumanPlayer::BeginPlay()
 {
 	Super::BeginPlay();
@@ -54,6 +53,7 @@ void AHumanPlayer::OnTurn()
 {
 	IsMyTurn = true;
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Your Turn"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Daje"));
 	//GameInstance->SetTurnMessage(TEXT("Human Turn"));
 }
 
@@ -72,12 +72,17 @@ void AHumanPlayer::OnLose()
 
 void AHumanPlayer::OnClick()
 {
+	
+	ACHESS_GameMode* GameMode = Cast<ACHESS_GameMode>(GetWorld()->GetAuthGameMode());
 	//Structure containing information about one hit of a trace, such as point of impact and surface normal at that point
 	FHitResult Hit = FHitResult(ForceInit);
 	// GetHitResultUnderCursor function sends a ray from the mouse position and gives the corresponding hit results
 	GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, true, Hit);
 	if (Hit.bBlockingHit && IsMyTurn)
 	{
+		if (AThePawn* CurrPawn = Cast<AThePawn>(Hit.GetActor())) {
+			CurrPawn->Move(3, 3);
+		}
 		if (ATile* CurrTile = Cast<ATile>(Hit.GetActor()))
 		{
 			if (CurrTile->GetTileStatus() == ETileStatus::EMPTY)
@@ -85,9 +90,9 @@ void AHumanPlayer::OnClick()
 				// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("clicked"));
 				CurrTile->SetTileStatus(PlayerNumber, ETileStatus::OCCUPIED);
 				FVector SpawnPosition = CurrTile->GetActorLocation();
-				//ATTT_GameMode* GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
+				//ACHESS_GameMode* GameMode = Cast<ACHESS_GameMode>(GetWorld()->GetAuthGameMode());
 				//GameMode->SetCellSign(PlayerNumber, SpawnPosition);
-				IsMyTurn = false;
+				//IsMyTurn = false;
 			}
 		}
 	}

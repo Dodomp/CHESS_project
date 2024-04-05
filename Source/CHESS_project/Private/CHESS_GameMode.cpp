@@ -29,6 +29,7 @@ void ACHESS_GameMode::BeginPlay()
 	{
 		GField = GetWorld()->SpawnActor<AGameField>(GameFieldClass);
 		GField->Size = FieldSize;
+		GField->GenerateField();
 	}
 	else
 	{
@@ -55,17 +56,70 @@ void ACHESS_GameMode::BeginPlay()
 
 void ACHESS_GameMode::ChoosePlayerAndStartGame()
 {
+	CurrentPlayer = FMath::RandRange(0, Players.Num() - 1);
+
+	for (int32 i = 0; i < Players.Num(); i++)
+	{
+		Players[i]->PlayerNumber = i;
+		Players[i]->Color = i == CurrentPlayer ? EColor::White : EColor::Black;
+	}
+	MoveCounter += 1;
+	Players[CurrentPlayer]->OnTurn();
 }
 
 void ACHESS_GameMode::SetCellSign(const int32 PlayerNumber, const FVector& SpawnPosition)
 {
+	/*if (IsGameOver || PlayerNumber != CurrentPlayer)
+	{
+		return;
+	}
+
+	UClass* SignActor = Players[CurrentPlayer]->Sign == ESign::X ? SignXActor : SignOActor;
+	FVector Location = GField->GetActorLocation() + SpawnPosition + FVector(0, 0, 10);
+	GetWorld()->SpawnActor(SignActor, &Location);
+
+	if (GField->IsWinPosition(GField->GetXYPositionByRelativeLocation(SpawnPosition)))
+	{
+		IsGameOver = true;
+		Players[CurrentPlayer]->OnWin();
+		for (int32 i = 0; i < Players.Num(); i++)
+		{
+			if (i != CurrentPlayer)
+			{
+				Players[i]->OnLose();
+			}
+		}
+	}
+	else if (MoveCounter == (FieldSize * FieldSize))
+	{
+		// add a timer (3 seconds)
+		FTimerHandle TimerHandle;
+
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
+			{
+				// function to delay
+				GField->ResetField();
+			}, 3, false);
+	}
+	else
+	{
+		TurnNextPlayer();
+	}*/
 }
 
 int32 ACHESS_GameMode::GetNextPlayer(int32 Player)
 {
-	return int32();
+	Player++;
+	if (!Players.IsValidIndex(Player))
+	{
+		Player = 0;
+	}
+	return Player;
 }
 
 void ACHESS_GameMode::TurnNextPlayer()
 {
+	MoveCounter += 1;
+	CurrentPlayer = GetNextPlayer(CurrentPlayer);
+	Players[CurrentPlayer]->OnTurn();
 }

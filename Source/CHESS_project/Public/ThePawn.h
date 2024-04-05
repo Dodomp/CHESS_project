@@ -4,36 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "CHESS_PlayerInterface.h"
-#include "CHESS_GameInstance.h"
-#include "CHESS_GameMode.h"
-#include "Kismet/GameplayStatics.h"
-#include "RandomPlayer.generated.h"
+#include "BasePiece.h"
+#include "ThePawn.generated.h"
 
 UCLASS()
-class CHESS_PROJECT_API ARandomPlayer : public APawn, public ICHESS_PlayerInterface
+class CHESS_PROJECT_API AThePawn : public ABasePiece
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
-	ARandomPlayer();
-
-	UCHESS_GameInstance* GameInstance;
+	AThePawn();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
+	bool HasMoved;
+
+	void Move(const double InX, const double InY);
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	virtual void OnTurn() override;
-	virtual void OnWin() override;
-	virtual void OnLose() override;
 
 };
