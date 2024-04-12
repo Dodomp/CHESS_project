@@ -2,14 +2,17 @@
 
 
 #include "ThePawn.h"
+#include "Materials/MaterialInstanceDynamic.h"
+#include "Engine/StaticMesh.h"
 
 // Sets default values
-AThePawn::AThePawn(): ABasePiece()
+AThePawn::AThePawn() : ABasePiece()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-	
+	//PrimaryActorTick.bCanEverTick = true;
 	HasMoved = false;
+
+    Name = ENamePiece::PAWN;
 
 }
 
@@ -20,9 +23,27 @@ void AThePawn::BeginPlay()
 	
 }
 
-void AThePawn::Move(const double InX, const double InY)
+
+/*void AThePawn::ApplyMaterial(bool value)
 {
-	SetGridPosition(InX, InY);
+    if (value == false) {
+        
+                  StaticMeshComponent->SetMaterial(0, White);
+
+    }
+    else { 
+        if (StaticMeshComponent) {
+            Black = LoadObject<UMaterialInterface>(nullptr, TEXT(" /Game/ Materials/ M_PB"));
+            if (Black) {
+                StaticMeshComponent->SetMaterial(0, Black);
+            }
+        }
+    }   
+}*/
+
+TArray<FVector2D> AThePawn::PossibleMoves()
+{
+    return GameField->HighlightMoves(Name, PlayerOwner, GetGridPosition(), HasMoved);
 }
 
 // Called every frame

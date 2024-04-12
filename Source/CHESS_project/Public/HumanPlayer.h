@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BasePiece.h"
 #include "GameFramework/Pawn.h"
 #include "CHESS_GameInstance.h"
 #include "Camera/CameraComponent.h"
@@ -25,6 +26,10 @@ public:
 	// game instance reference
 	UCHESS_GameInstance* GameInstance;
 
+	ABasePiece* TempPiece;
+
+	TArray<FVector2D> TempMoves;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -45,5 +50,10 @@ public:
 
 	UFUNCTION()
 	void OnClick();
+
+	void UpdateTiles(ABasePiece* Piece, ATile* Tile);
+
+	void DeleteSuggestion(ABasePiece* Piece, TArray<FVector2D> TilesColorated);
+	
 
 };

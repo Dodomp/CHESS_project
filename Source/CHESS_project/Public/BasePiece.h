@@ -3,13 +3,34 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameField.h"
+#include <cstdint>
 #include "GameFramework/Pawn.h"
+#include "Components/StaticMeshComponent.h"
 #include "BasePiece.generated.h"
+
+
+
+UENUM()
+enum class ENamePiece : uint8
+{
+	//KING UMETA(DisplayName = "King"), 
+	//QUEEN UMETA(DisplayName = "Queen"),
+	//BISHOP UMETA(DisplayName = "Bishop"), 
+	KNIGHT UMETA(DisplayName = "Knight"), 
+	TOWER UMETA(DisplayName = "Tower"), 
+	PAWN UMETA(DisplayName = "Pawn"), 
+	
+};
+
+
+
 
 UCLASS()
 class CHESS_PROJECT_API ABasePiece : public APawn
 {
 	GENERATED_BODY()
+
 
 public:
 	// Sets default values for this pawn's properties
@@ -19,10 +40,22 @@ public:
 
 	FVector2D GetGridPosition();
 
+	AGameField* GameField;
+
+	TArray<FVector2D> SuggestMoves;
+
+	ENamePiece Name;
+
 	void SetGridPosition(const double InX, const double InY);
 
 	void SetPlayerOwner(const int32 TileOwner);
 
+	void SetGameField(AGameField* GF);
+
+	UFUNCTION(BlueprintCallable)
+	void ApplyMaterial(bool value);
+	
+	virtual TArray<FVector2D> PossibleMoves();
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -37,6 +70,13 @@ public:
 	// (x, y) position of the tile
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FVector2D PieceGridPosition;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
+		UMaterialInterface* White;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
+		UMaterialInterface* Black;
+
 
 protected:
 	// Called when the game starts or when spawned

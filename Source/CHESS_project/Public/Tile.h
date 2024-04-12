@@ -69,6 +69,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FVector2D TileGridPosition;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
+		UMaterialInterface* White;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
+		UMaterialInterface* Black;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
+		UMaterialInterface* Green;
+
 	
 
 

@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include <CHESS_PlayerController.h>
 #include <GameField.h>
+#include <BasePiece.h>
 #include "CHESS_GameMode.generated.h"
 
 /**
@@ -24,6 +25,8 @@ public:
 	int32 CurrentPlayer;
 	// tracks the number of moves in order to signal a drawn game
 	int32 MoveCounter;
+
+
 
 	// TSubclassOf is a template class that provides UClass type safety.
 	UPROPERTY(EditDefaultsOnly)

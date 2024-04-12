@@ -3,36 +3,27 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
 #include "BasePiece.h"
 #include "GameField.h"
-#include "ThePawn.generated.h"
+#include "GameFramework/Pawn.h"
+#include "Tower.generated.h"
 
 UCLASS()
-class CHESS_PROJECT_API AThePawn : public ABasePiece
+class CHESS_PROJECT_API ATower : public ABasePiece
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
-	AThePawn();
+	ATower();
 
-	
+	TArray<FVector2D> PossibleMoves() override;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
-	bool HasMoved;
-
-	//void ApplyMaterial (bool value) override;
-
-	TArray<FVector2D> PossibleMoves() override;
-
-
-
-
+public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

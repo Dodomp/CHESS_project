@@ -24,6 +24,7 @@ ABasePiece::ABasePiece()
 	//centrata nell'origine degli assi
 	PieceGridPosition = FVector2D(0, 0);
 
+
 }
 
 int32 ABasePiece::GetPlayerOwner()
@@ -44,6 +45,31 @@ void ABasePiece::SetGridPosition(const double InX, const double InY)
 void ABasePiece::SetPlayerOwner(const int32 PieceOwner)
 {
 	PlayerOwner = PieceOwner;
+}
+
+void ABasePiece::SetGameField(AGameField* GF)
+{
+	GameField = GF;
+}
+
+void ABasePiece::ApplyMaterial(bool value)
+{
+	UE_LOG(LogTemp, Error, TEXT("passa"));
+	if (value == false) {
+		StaticMeshComponent->SetMaterial(0, White);
+		UE_LOG(LogTemp, Error, TEXT("passa1"));
+	}
+		
+	else {
+		StaticMeshComponent->SetMaterial(0, Black);
+		UE_LOG(LogTemp, Error, TEXT("passa2"));
+
+	}
+}
+
+TArray<FVector2D> ABasePiece::PossibleMoves()
+{
+	return TArray<FVector2D>();
 }
 
 // Called when the game starts or when spawned

@@ -3,6 +3,8 @@
 
 #include "HumanPlayer.h"
 #include "GameField.h"
+//#include "Tile.h"
+#include "ThePawn.h"
 #include "CHESS_GameMode.h"
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
@@ -26,6 +28,8 @@ AHumanPlayer::AHumanPlayer()
 	// default init values
 	PlayerNumber = -1;
 	Color = EColor::NotDefined;
+
+	TempPiece = nullptr;
 
 }
 //Called when the game starts or when spawned
@@ -54,7 +58,7 @@ void AHumanPlayer::OnTurn()
 	IsMyTurn = true;
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Your Turn"));
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("Daje"));
-	//GameInstance->SetTurnMessage(TEXT("Human Turn"));
+	GameInstance->SetTurnMessage(TEXT("Human Turn"));
 }
 
 void AHumanPlayer::OnWin()
@@ -72,7 +76,9 @@ void AHumanPlayer::OnLose()
 
 void AHumanPlayer::OnClick()
 {
-	
+	//ABasePiece* CurrPiece;
+	//ATile* CurrTile;
+	UE_LOG(LogTemp, Error, TEXT("OnClick passa1"));
 	ACHESS_GameMode* GameMode = Cast<ACHESS_GameMode>(GetWorld()->GetAuthGameMode());
 	//Structure containing information about one hit of a trace, such as point of impact and surface normal at that point
 	FHitResult Hit = FHitResult(ForceInit);
@@ -80,11 +86,26 @@ void AHumanPlayer::OnClick()
 	GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, true, Hit);
 	if (Hit.bBlockingHit && IsMyTurn)
 	{
-		if (AThePawn* CurrPawn = Cast<AThePawn>(Hit.GetActor())) {
-			CurrPawn->Move(3, 3);
+		if (ABasePiece* CurrPiece = Cast<ABasePiece>(Hit.GetActor())) {
+			if (CurrPiece->PlayerOwner == 0) {
+				TempPiece = CurrPiece;
+				TempMoves = TempPiece->PossibleMoves();
+				
+			}
 		}
 		if (ATile* CurrTile = Cast<ATile>(Hit.GetActor()))
 		{
+			if (TempMoves.Find(FVector2D(CurrTile->GetGridPosition())) != INDEX_NONE) {
+				if (TempPiece != nullptr) {
+					AGameField* GF = TempPiece->GameField;
+					FVector EndPosition = GF->GetRelativeLocationByXYPosition(CurrTile->GetGridPosition().X, CurrTile->GetGridPosition().Y);
+					UpdateTiles(TempPiece, CurrTile);
+					TempPiece->SetActorLocation(EndPosition);
+					DeleteSuggestion(TempPiece, TempMoves);
+					TempMoves.Empty();
+					
+				}
+			}
 			if (CurrTile->GetTileStatus() == ETileStatus::EMPTY)
 			{
 				// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("clicked"));
@@ -98,3 +119,17 @@ void AHumanPlayer::OnClick()
 	}
 }
 
+void AHumanPlayer::UpdateTiles(ABasePiece* Piece, ATile* Tile) {
+	//devo aggiornare lo status, il playerOwner
+	AGameField* GameField = Piece->GameField;
+	GameField->Update(Piece, Tile);
+
+}
+
+
+void AHumanPlayer::DeleteSuggestion(ABasePiece* Piece, TArray<FVector2D> TilesColorated) {
+
+	AGameField* GameField = Piece->GameField;
+	GameField->Discoloration(TilesColorated);
+
+}

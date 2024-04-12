@@ -5,9 +5,21 @@
 
 #include "CoreMinimal.h"
 #include "Tile.h"
-#include "ThePawn.h"
+//#include "BasePiece.h"
+#include <cstdint>
 #include "GameFramework/Actor.h"
 #include "GameField.generated.h"
+
+
+enum class ENamePiece : uint8;
+class ABasePiece;
+class AThePawn;
+class ATower;
+class AKnight;
+class ABishop;
+class AQueen;
+class AKing;
+
 
 
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnReset);
@@ -44,13 +56,27 @@ public:
 
 	// TSubclassOf template class that provides UClass type safety
 	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<ATile> TileClassBlack;
+		TSubclassOf<ATile> TileClass;
+
 
 	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<ATile> TileClassWhite;
+		TSubclassOf<AThePawn> PawnClass;
 
 	UPROPERTY(EditDefaultsOnly)
-		TSubclassOf<AThePawn> ThePawnClassWhite;
+		TSubclassOf<ATower> TowerClass;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<AKnight> KnightClass;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<ABishop> BishopClass;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<AQueen> QueenClass;
+
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<AKing> KingClass;
+
 
 
 	// tile size
@@ -76,6 +102,8 @@ public:
 
 	// generate an empty game field
 	void GenerateField();
+
+	void PlacePeaces(int32 InX, int32 InY, AGameField* GF);
 
 	// return a (x,y) position given a hit (click) on a field tile
 	FVector2D GetPosition(const FHitResult& Hit);
@@ -103,6 +131,14 @@ public:
 
 	// check if a line contains all equal elements
 	//bool AllEqual(const TArray<int32>& Array) const;
+
+	void PaintTiles(TArray<FVector2D> moves);
+
+	TArray<FVector2D> HighlightMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
+
+	void Update(ABasePiece* Piece, ATile* Tile);
+
+	void Discoloration(TArray<FVector2D> TilesColorated);
 
 
 
