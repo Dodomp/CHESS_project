@@ -140,6 +140,18 @@ public:
 
 	void Discoloration(TArray<FVector2D> TilesColorated);
 
+	TArray<FVector2D> PawnMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
+
+	TArray<FVector2D> TowerMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
+
+	TArray<FVector2D> KnightMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
+
+	TArray<FVector2D> BishopMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
+
+	TArray<FVector2D> QueenMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
+
+	TArray<FVector2D> KingMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
+
 
 
 };

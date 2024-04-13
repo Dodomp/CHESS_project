@@ -9,13 +9,13 @@ AQueen::AQueen()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//Name = ENamePiece::QUEEN;
+	Name = ENamePiece::QUEEN;
 
 }
 
 TArray<FVector2D> AQueen::PossibleMoves()
 {
-	return TArray<FVector2D>();
+	return GameField->HighlightMoves(Name, PlayerOwner, GetGridPosition(), false);
 }
 
 // Called when the game starts or when spawned

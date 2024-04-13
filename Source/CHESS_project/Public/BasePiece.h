@@ -14,9 +14,9 @@
 UENUM()
 enum class ENamePiece : uint8
 {
-	//KING UMETA(DisplayName = "King"), 
-	//QUEEN UMETA(DisplayName = "Queen"),
-	//BISHOP UMETA(DisplayName = "Bishop"), 
+	KING UMETA(DisplayName = "King"), 
+	QUEEN UMETA(DisplayName = "Queen"),
+	BISHOP UMETA(DisplayName = "Bishop"), 
 	KNIGHT UMETA(DisplayName = "Knight"), 
 	TOWER UMETA(DisplayName = "Tower"), 
 	PAWN UMETA(DisplayName = "Pawn"), 

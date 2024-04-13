@@ -281,128 +281,41 @@ TArray<FVector2D> AGameField::HighlightMoves(ENamePiece Nome, int32 proprietario
 	switch (Nome) {
 
 	case ENamePiece::PAWN:
-		//nord direction
-		if ((*TileMap.Find(FVector2D(position.X+1, position.Y)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X + 1, position.Y)))->PlayerOwner == proprietario);
-		else if ((*TileMap.Find(FVector2D(position.X + 1, position.Y)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X + 1, position.Y)))->PlayerOwner != proprietario);
-		else {
-			if (FirstMove == true) {
-				LegalMoves.Add(FVector2D(position.X+1, position.Y));
-			}
-			else {
-				LegalMoves.Add(FVector2D(position.X + 1, position.Y));
-				LegalMoves.Add(FVector2D(position.X + 2, position.Y));
-			}
-		}
 		
+		LegalMoves = PawnMoves(Nome, proprietario, position, FirstMove);
 		break;
 
 	case ENamePiece::TOWER:
-		//nord direction
-		for (int32 i = position.X+1; i < Size; i++) {
-			if (IsValidPosition(FVector2D(i, position.Y))) {
-				if ((*TileMap.Find(FVector2D(i, position.Y)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(i, position.Y)))->PlayerOwner == proprietario) break;
-				else if ((*TileMap.Find(FVector2D(i, position.Y)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(i, position.Y)))->PlayerOwner != proprietario) {
-					LegalMoves.Add(FVector2D(i, position.Y));
-					break;
-				}
-				else {
-					LegalMoves.Add(FVector2D(i, position.Y));
-				}
-			}
-			
-		}
-		//south direction
-		for (int32 i = position.X - 1; i > -1; i--) {
-			if (IsValidPosition(FVector2D(i, position.Y))) {
-				if ((*TileMap.Find(FVector2D(i, position.Y)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(i, position.Y)))->PlayerOwner == proprietario) break;
-				else if ((*TileMap.Find(FVector2D(i, position.Y)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(i, position.Y)))->PlayerOwner != proprietario) {
-					LegalMoves.Add(FVector2D(i, position.Y));
-					break;
-				}
-				else {
-					LegalMoves.Add(FVector2D(i, position.Y));
-				}
-			}
-			
-		}
-		//est direction
-		for (int32 i = position.Y + 1; i < Size; i++) {
-			if (IsValidPosition(FVector2D(position.X, i))) {
-				if ((*TileMap.Find(FVector2D(position.X, i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X, i)))->PlayerOwner == proprietario) break;
-				else if ((*TileMap.Find(FVector2D(position.X, i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X, i)))->PlayerOwner != proprietario) {
-					LegalMoves.Add(FVector2D(position.X, i));
-					break;
-				}
-				else {
-					LegalMoves.Add(FVector2D(position.X, i));
-				}
-			}
-
-		}
-		//west direction
-		for (int32 i = position.Y + 1; i > -1; i--) {
-			if (IsValidPosition(FVector2D(position.X, i))) {
-				if ((*TileMap.Find(FVector2D(position.X, i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X, i)))->PlayerOwner == proprietario) break;
-				else if ((*TileMap.Find(FVector2D(position.X, i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X, i)))->PlayerOwner != proprietario) {
-					LegalMoves.Add(FVector2D(position.X, i));
-					break;
-				}
-				else {
-					LegalMoves.Add(FVector2D(position.X, i));
-				}
-			}
-
-		}
+		LegalMoves = TowerMoves(Nome, proprietario, position, false);
 		break;
 
-		case ENamePiece::KNIGHT:
-			//nord direction
-			if (IsValidPosition(FVector2D(position.X + 2, position.Y - 1)) && ((*TileMap.Find(FVector2D(position.X + 2, position.Y - 1)))->GetTileStatus() != ETileStatus::OCCUPIED || (*TileMap.Find(FVector2D(position.X + 2, position.Y + 1)))->PlayerOwner != proprietario)) {
-				LegalMoves.Add(FVector2D(position.X + 2, position.Y - 1));
-			}
-			if (IsValidPosition(FVector2D(position.X + 2, position.Y + 1)) && ((*TileMap.Find(FVector2D(position.X + 2, position.Y + 1)))->GetTileStatus() != ETileStatus::OCCUPIED || (*TileMap.Find(FVector2D(position.X + 2, position.Y + 1)))->PlayerOwner != proprietario)) {
-				LegalMoves.Add(FVector2D(position.X + 2, position.Y + 1));
-			}
-			//south direction
-			if (IsValidPosition(FVector2D(position.X - 2, position.Y - 1)) && ((*TileMap.Find(FVector2D(position.X - 2, position.Y - 1)))->GetTileStatus() != ETileStatus::OCCUPIED || (*TileMap.Find(FVector2D(position.X - 2, position.Y - 1)))->PlayerOwner != proprietario)) {
-				LegalMoves.Add(FVector2D(position.X - 2, position.Y - 1));
-			}
-			if (IsValidPosition(FVector2D(position.X - 2, position.Y + 1)) && ((*TileMap.Find(FVector2D(position.X - 2, position.Y + 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X + 2, position.Y + 1)))->PlayerOwner != proprietario)) {
-				LegalMoves.Add(FVector2D(position.X - 2, position.Y + 1));
-			}
-			//est directio
-			if (IsValidPosition(FVector2D(position.X + 1, position.Y + 2)) && ((*TileMap.Find(FVector2D(position.X + 1, position.Y + 2)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X + 1, position.Y + 2)))->PlayerOwner != proprietario)) {
-				LegalMoves.Add(FVector2D(position.X + 1, position.Y + 2));
-			}
-			if (IsValidPosition(FVector2D(position.X - 1, position.Y + 2)) && ((*TileMap.Find(FVector2D(position.X - 1, position.Y + 2)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X - 1, position.Y + 2)))->PlayerOwner != proprietario)) {
-				LegalMoves.Add(FVector2D(position.X - 1, position.Y + 2));
-			}
-			//west direction
-			if (IsValidPosition(FVector2D(position.X + 1, position.Y - 2)) && ((*TileMap.Find(FVector2D(position.X + 1, position.Y - 2)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X + 1, position.Y - 2)))->PlayerOwner != proprietario)) {
-				LegalMoves.Add(FVector2D(position.X + 1, position.Y - 2));
-			}
-			if (IsValidPosition(FVector2D(position.X - 1, position.Y - 2)) && ((*TileMap.Find(FVector2D(position.X - 1, position.Y - 2)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X - 1, position.Y - 2)))->PlayerOwner != proprietario)) {
-				LegalMoves.Add(FVector2D(position.X - 1, position.Y - 2));
-			}
+	case ENamePiece::KNIGHT:
+		LegalMoves = KnightMoves(Nome, proprietario, position, false);
+		break;
 
 
+	case ENamePiece::BISHOP:
+		LegalMoves = BishopMoves(Nome, proprietario, position, false);
+		break;
 
 
-			break;
-			/*case ENamePiece::BISHOP:
-				break;
-			case ENamePiece::QUEEN:
-				break;
-			case ENamePiece::KING:
-				break;*/
+	case ENamePiece::QUEEN:
+		LegalMoves = QueenMoves(Nome, proprietario, position, false);
+		break;
+
+
+	case ENamePiece::KING:
+		LegalMoves = KingMoves(Nome, proprietario, position, false);
+		break;
+	
+
+			
 
 	}
 
 	PaintTiles(LegalMoves);
 
 	return LegalMoves;
-
-
 
 }
 
@@ -425,11 +338,13 @@ void AGameField::Update(ABasePiece* Piece, ATile* NewTile)
 void AGameField::Discoloration(TArray<FVector2D> TilesColorated)
 {
 	for (int32 x = 0; x < Size; x++) {
-		for (int32 y = 0; y < Size; x++) {
+		for (int32 y = 0; y < Size; y++) {
 			//int32 InX = (*TileMap.Find(FVector2D(x, y)))->TileGridPosition.X;
 			//int32 InY = (*TileMap.Find(FVector2D(x, y)))->TileGridPosition.Y;
 			if ( (x+y) % 2 == 0) {
-				(*TileMap.Find(FVector2D(x, y)))->StaticMeshComponent->SetMaterial(0, (*TileMap.Find(FVector2D(x, y)))->Black);
+				if ((*TileMap.Find(FVector2D(x, y)))->Black) {
+					(*TileMap.Find(FVector2D(x, y)))->StaticMeshComponent->SetMaterial(0, (*TileMap.Find(FVector2D(x, y)))->Black);
+				}
 			}
 			else {
 				(*TileMap.Find(FVector2D(x, y)))->StaticMeshComponent->SetMaterial(0, (*TileMap.Find(FVector2D(x, y)))->White);
@@ -437,6 +352,257 @@ void AGameField::Discoloration(TArray<FVector2D> TilesColorated)
 		}
 		
 	}
+}
+
+TArray<FVector2D> AGameField::PawnMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove)
+{
+	TArray<FVector2D> LegalMoves;
+	//nord direction
+	if ((*TileMap.Find(FVector2D(position.X + 1, position.Y)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X + 1, position.Y)))->PlayerOwner == proprietario);
+	else if ((*TileMap.Find(FVector2D(position.X + 1, position.Y)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X + 1, position.Y)))->PlayerOwner != proprietario);
+	else {
+		if (FirstMove == true) {
+			LegalMoves.Add(FVector2D(position.X + 1, position.Y));
+		}
+		else {
+			LegalMoves.Add(FVector2D(position.X + 1, position.Y));
+			LegalMoves.Add(FVector2D(position.X + 2, position.Y));
+		}
+	}
+
+	return LegalMoves;
+}
+
+TArray<FVector2D> AGameField::TowerMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove)
+{
+	TArray<FVector2D> LegalMoves;
+
+	//nord direction
+	for (int32 i = position.X + 1; i < Size; i++) {
+		if (IsValidPosition(FVector2D(i, position.Y))) {
+			if ((*TileMap.Find(FVector2D(i, position.Y)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(i, position.Y)))->PlayerOwner == proprietario) break;
+			else if ((*TileMap.Find(FVector2D(i, position.Y)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(i, position.Y)))->PlayerOwner != proprietario) {
+				LegalMoves.Add(FVector2D(i, position.Y));
+				break;
+			}
+			else {
+				LegalMoves.Add(FVector2D(i, position.Y));
+			}
+		}
+
+	}
+	//south direction
+	for (int32 i = position.X - 1; i > -1; i--) {
+		if (IsValidPosition(FVector2D(i, position.Y))) {
+			if ((*TileMap.Find(FVector2D(i, position.Y)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(i, position.Y)))->PlayerOwner == proprietario) break;
+			else if ((*TileMap.Find(FVector2D(i, position.Y)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(i, position.Y)))->PlayerOwner != proprietario) {
+				LegalMoves.Add(FVector2D(i, position.Y));
+				break;
+			}
+			else {
+				LegalMoves.Add(FVector2D(i, position.Y));
+			}
+		}
+
+	}
+	//est direction
+	for (int32 i = position.Y + 1; i < Size; i++) {
+		if (IsValidPosition(FVector2D(position.X, i))) {
+			if ((*TileMap.Find(FVector2D(position.X, i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X, i)))->PlayerOwner == proprietario) break;
+			else if ((*TileMap.Find(FVector2D(position.X, i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X, i)))->PlayerOwner != proprietario) {
+				LegalMoves.Add(FVector2D(position.X, i));
+				break;
+			}
+			else {
+				LegalMoves.Add(FVector2D(position.X, i));
+			}
+		}
+
+	}
+	//west direction
+	for (int32 i = position.Y - 1; i > -1; i--) {
+		if (IsValidPosition(FVector2D(position.X, i))) {
+			if ((*TileMap.Find(FVector2D(position.X, i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X, i)))->PlayerOwner == proprietario) break;
+			else if ((*TileMap.Find(FVector2D(position.X, i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X, i)))->PlayerOwner != proprietario) {
+				LegalMoves.Add(FVector2D(position.X, i));
+				break;
+			}
+			else {
+				LegalMoves.Add(FVector2D(position.X, i));
+			}
+		}
+
+	}
+
+	return LegalMoves;
+}
+
+TArray<FVector2D> AGameField::KnightMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove)
+{
+	TArray<FVector2D> LegalMoves;
+
+	//nord direction
+	if (IsValidPosition(FVector2D(position.X + 2, position.Y - 1)) && ((*TileMap.Find(FVector2D(position.X + 2, position.Y - 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X + 2, position.Y - 1)))->PlayerOwner != proprietario)) {
+		LegalMoves.Add(FVector2D(position.X + 2, position.Y - 1));
+	}
+	if (IsValidPosition(FVector2D(position.X + 2, position.Y + 1)) && ((*TileMap.Find(FVector2D(position.X + 2, position.Y + 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X + 2, position.Y + 1)))->PlayerOwner != proprietario)) {
+		LegalMoves.Add(FVector2D(position.X + 2, position.Y + 1));
+	}
+	//south direction
+	if (IsValidPosition(FVector2D(position.X - 2, position.Y - 1)) && ((*TileMap.Find(FVector2D(position.X - 2, position.Y - 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X - 2, position.Y - 1)))->PlayerOwner != proprietario)) {
+		LegalMoves.Add(FVector2D(position.X - 2, position.Y - 1));
+	}
+	if (IsValidPosition(FVector2D(position.X - 2, position.Y + 1)) && ((*TileMap.Find(FVector2D(position.X - 2, position.Y + 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X - 2, position.Y + 1)))->PlayerOwner != proprietario)) {
+		LegalMoves.Add(FVector2D(position.X - 2, position.Y + 1));
+	}
+	//est directio
+	if (IsValidPosition(FVector2D(position.X + 1, position.Y + 2)) && ((*TileMap.Find(FVector2D(position.X + 1, position.Y + 2)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X + 1, position.Y + 2)))->PlayerOwner != proprietario)) {
+		LegalMoves.Add(FVector2D(position.X + 1, position.Y + 2));
+	}
+	if (IsValidPosition(FVector2D(position.X - 1, position.Y + 2)) && ((*TileMap.Find(FVector2D(position.X - 1, position.Y + 2)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X - 1, position.Y + 2)))->PlayerOwner != proprietario)) {
+		LegalMoves.Add(FVector2D(position.X - 1, position.Y + 2));
+	}
+	//west direction
+	if (IsValidPosition(FVector2D(position.X + 1, position.Y - 2)) && ((*TileMap.Find(FVector2D(position.X + 1, position.Y - 2)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X + 1, position.Y - 2)))->PlayerOwner != proprietario)) {
+		LegalMoves.Add(FVector2D(position.X + 1, position.Y - 2));
+	}
+	if (IsValidPosition(FVector2D(position.X - 1, position.Y - 2)) && ((*TileMap.Find(FVector2D(position.X - 1, position.Y - 2)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X - 1, position.Y - 2)))->PlayerOwner != proprietario)) {
+		LegalMoves.Add(FVector2D(position.X - 1, position.Y - 2));
+	}
+
+	return LegalMoves;
+}
+
+TArray<FVector2D> AGameField::BishopMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove)
+{
+	TArray<FVector2D> LegalMoves;
+
+	//nord east direction: x increases, y increases
+	for (int32 i = 1; i < Size; i++) {
+		if (IsValidPosition(FVector2D(position.X + i, position.Y + i))) {
+			if ((*TileMap.Find(FVector2D(position.X + i, position.Y + i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X + i, position.Y + i)))->PlayerOwner == proprietario) break;
+			else if ((*TileMap.Find(FVector2D(position.X + i, position.Y + i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X + i, position.Y + i)))->PlayerOwner != proprietario) {
+				LegalMoves.Add(FVector2D(position.X + i, position.Y + i));
+				break;
+			}
+			else {
+				LegalMoves.Add(FVector2D(position.X + i, position.Y + i));
+			}
+		}
+		else break;
+	}
+	//nord-west direction: y decreases and x increases
+	for (int32 i = 1; i < Size; i++) {
+		if (IsValidPosition(FVector2D(position.X + i, position.Y - i))) {
+			if ((*TileMap.Find(FVector2D(position.X + i, position.Y - i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X + i, position.Y - i)))->PlayerOwner == proprietario) break;
+			else if ((*TileMap.Find(FVector2D(position.X + i, position.Y - i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X + i, position.Y - i)))->PlayerOwner != proprietario) {
+				LegalMoves.Add(FVector2D(position.X + i, position.Y - i));
+				break;
+			}
+			else {
+				LegalMoves.Add(FVector2D(position.X + i, position.Y - i));
+			}
+		}
+		else break;
+
+	}
+	//south-west direction: x decreases and y decreases
+	for (int32 i = 1; i < Size; i++) {
+		if (IsValidPosition(FVector2D(position.X - i, position.Y - i))) {
+			if ((*TileMap.Find(FVector2D(position.X - i, position.Y - i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X - i, position.Y - i)))->PlayerOwner == proprietario) break;
+			else if ((*TileMap.Find(FVector2D(position.X - i, position.Y - i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X - i, position.Y - i)))->PlayerOwner != proprietario) {
+				LegalMoves.Add(FVector2D(position.X - i, position.Y - i));
+				break;
+			}
+			else {
+				LegalMoves.Add(FVector2D(position.X - i, position.Y - i));
+			}
+		}
+		else break;
+	}
+	//south-east direction: x decreases and y increases
+	for (int32 i = 1; i < Size; i++) {
+		if (IsValidPosition(FVector2D(position.X - i, position.Y + i))) {
+			if ((*TileMap.Find(FVector2D(position.X - i, position.Y + i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X - i, position.Y + i)))->PlayerOwner == proprietario) break;
+			else if ((*TileMap.Find(FVector2D(position.X - i, position.Y + i)))->GetTileStatus() == ETileStatus::OCCUPIED && (*TileMap.Find(FVector2D(position.X - i, position.Y + i)))->PlayerOwner != proprietario) {
+				LegalMoves.Add(FVector2D(position.X - i, position.Y + i));
+				break;
+			}
+			else {
+				LegalMoves.Add(FVector2D(position.X - i, position.Y + i));
+			}
+		}
+		else break;
+
+	}
+
+	return LegalMoves;
+}
+
+TArray<FVector2D> AGameField::QueenMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove)
+{
+	TArray<FVector2D> LegalMoves;
+
+	LegalMoves = TowerMoves(Nome, proprietario, position, false);
+	LegalMoves.Append(BishopMoves(Nome, proprietario, position, false));
+
+	return LegalMoves;
+}
+
+TArray<FVector2D> AGameField::KingMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove)
+{
+	TArray<FVector2D> LegalMoves;
+
+	if (IsValidPosition(FVector2D(position.X + 1, position.Y))) {
+		if ((*TileMap.Find(FVector2D(position.X + 1, position.Y)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X + 1, position.Y)))->PlayerOwner != proprietario) {
+			LegalMoves.Add(FVector2D(position.X + 1, position.Y));
+		}
+	}
+
+	if (IsValidPosition(FVector2D(position.X - 1, position.Y))) {
+		if ((*TileMap.Find(FVector2D(position.X - 1, position.Y)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X - 1, position.Y)))->PlayerOwner != proprietario) {
+			LegalMoves.Add(FVector2D(position.X - 1, position.Y));
+		}
+	}
+
+	if (IsValidPosition(FVector2D(position.X, position.Y+1))) {
+		if ((*TileMap.Find(FVector2D(position.X, position.Y+1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X, position.Y+1)))->PlayerOwner != proprietario) {
+			LegalMoves.Add(FVector2D(position.X, position.Y+1));
+		}
+	}
+
+	if (IsValidPosition(FVector2D(position.X, position.Y - 1))) {
+		if ((*TileMap.Find(FVector2D(position.X, position.Y - 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X, position.Y - 1)))->PlayerOwner != proprietario) {
+			LegalMoves.Add(FVector2D(position.X, position.Y - 1));
+		}
+	}
+
+	if (IsValidPosition(FVector2D(position.X+1, position.Y + 1))) {
+		if ((*TileMap.Find(FVector2D(position.X+1, position.Y + 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X+1, position.Y + 1)))->PlayerOwner != proprietario) {
+			LegalMoves.Add(FVector2D(position.X+1, position.Y + 1));
+		}
+	}
+
+	if (IsValidPosition(FVector2D(position.X - 1, position.Y - 1))) {
+		if ((*TileMap.Find(FVector2D(position.X - 1, position.Y - 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X - 1, position.Y - 1)))->PlayerOwner != proprietario) {
+			LegalMoves.Add(FVector2D(position.X - 1, position.Y - 1));
+		}
+	}
+
+	if (IsValidPosition(FVector2D(position.X - 1, position.Y + 1))) {
+		if ((*TileMap.Find(FVector2D(position.X - 1, position.Y + 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X - 1, position.Y + 1)))->PlayerOwner != proprietario) {
+			LegalMoves.Add(FVector2D(position.X - 1, position.Y + 1));
+		}
+	}
+
+	if (IsValidPosition(FVector2D(position.X + 1, position.Y - 1))) {
+		if ((*TileMap.Find(FVector2D(position.X + 1, position.Y - 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X + 1, position.Y - 1)))->PlayerOwner != proprietario) {
+			LegalMoves.Add(FVector2D(position.X + 1, position.Y - 1));
+		}
+	}
+
+
+	return LegalMoves;
 }
 
 

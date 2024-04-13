@@ -9,13 +9,13 @@ AKing::AKing(): ABasePiece()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//Name = ENamePiece::KING;
+	Name = ENamePiece::KING;
 
 }
 
 TArray<FVector2D> AKing::PossibleMoves()
 {
-	return TArray<FVector2D>();
+	return GameField->HighlightMoves(Name, PlayerOwner, GetGridPosition(), false);
 }
 
 // Called when the game starts or when spawned
