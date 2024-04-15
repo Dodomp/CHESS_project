@@ -101,9 +101,6 @@ void AHumanPlayer::OnClick()
 				
 				Eat(TempPiece, CurrPiece);
 			}
-
-
-
 			
 		}
 		if (ATile* CurrTile = Cast<ATile>(Hit.GetActor()))
