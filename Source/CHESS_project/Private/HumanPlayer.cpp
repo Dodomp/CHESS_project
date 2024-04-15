@@ -87,11 +87,24 @@ void AHumanPlayer::OnClick()
 	if (Hit.bBlockingHit && IsMyTurn)
 	{
 		if (ABasePiece* CurrPiece = Cast<ABasePiece>(Hit.GetActor())) {
-			if (CurrPiece->PlayerOwner == 0) {
+
+			if (CurrPiece != TempPiece && TempPiece != nullptr && CurrPiece->PlayerOwner == GameMode->CurrentPlayer) {
+				DeleteSuggestion(TempPiece);
+			}
+			
+			if (CurrPiece->PlayerOwner == GameMode->CurrentPlayer) {
 				TempPiece = CurrPiece;
 				TempMoves = TempPiece->PossibleMoves();
-				
 			}
+			
+			if (CurrPiece != TempPiece && TempPiece != nullptr && CurrPiece->PlayerOwner != GameMode->CurrentPlayer) {
+				
+				Eat(TempPiece, CurrPiece);
+			}
+
+
+
+			
 		}
 		if (ATile* CurrTile = Cast<ATile>(Hit.GetActor()))
 		{
@@ -101,21 +114,14 @@ void AHumanPlayer::OnClick()
 					FVector EndPosition = GF->GetRelativeLocationByXYPosition(CurrTile->GetGridPosition().X, CurrTile->GetGridPosition().Y);
 					UpdateTiles(TempPiece, CurrTile);
 					TempPiece->SetActorLocation(EndPosition);
-					DeleteSuggestion(TempPiece, TempMoves);
+					DeleteSuggestion(TempPiece);
 					TempMoves.Empty();
+					TempPiece = nullptr;
 					
 				}
 			}
-			if (CurrTile->GetTileStatus() == ETileStatus::EMPTY)
-			{
-				// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("clicked"));
-				CurrTile->SetTileStatus(PlayerNumber, ETileStatus::OCCUPIED);
-				FVector SpawnPosition = CurrTile->GetActorLocation();
-				//ACHESS_GameMode* GameMode = Cast<ACHESS_GameMode>(GetWorld()->GetAuthGameMode());
-				//GameMode->SetCellSign(PlayerNumber, SpawnPosition);
-				//IsMyTurn = false;
-			}
 		}
+		//if ()
 	}
 }
 
@@ -127,9 +133,21 @@ void AHumanPlayer::UpdateTiles(ABasePiece* Piece, ATile* Tile) {
 }
 
 
-void AHumanPlayer::DeleteSuggestion(ABasePiece* Piece, TArray<FVector2D> TilesColorated) {
+void AHumanPlayer::DeleteSuggestion(ABasePiece* Piece) {
 
 	AGameField* GameField = Piece->GameField;
-	GameField->Discoloration(TilesColorated);
+	GameField->Discoloration();
+
+}
+
+void AHumanPlayer::Eat(ABasePiece* Lived, ABasePiece* Dead)
+{
+	AGameField* GF = TempPiece->GameField;
+	FVector EndPosition = GF->GetRelativeLocationByXYPosition(Dead->GetGridPosition().X, Dead->GetGridPosition().Y);
+	GF->Eaten(Lived, Dead);
+	TempPiece->SetActorLocation(EndPosition);
+	DeleteSuggestion(TempPiece);
+	TempMoves.Empty();
+	TempPiece = nullptr;
 
 }

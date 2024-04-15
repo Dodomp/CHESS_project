@@ -138,7 +138,7 @@ public:
 
 	void Update(ABasePiece* Piece, ATile* Tile);
 
-	void Discoloration(TArray<FVector2D> TilesColorated);
+	void Discoloration();
 
 	TArray<FVector2D> PawnMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
 
@@ -151,6 +151,8 @@ public:
 	TArray<FVector2D> QueenMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
 
 	TArray<FVector2D> KingMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
+
+	void Eaten(ABasePiece* Lived, ABasePiece* Dead);
 
 
 

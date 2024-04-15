@@ -53,7 +53,8 @@ public:
 
 	void UpdateTiles(ABasePiece* Piece, ATile* Tile);
 
-	void DeleteSuggestion(ABasePiece* Piece, TArray<FVector2D> TilesColorated);
+	void DeleteSuggestion(ABasePiece* Piece);
 	
+	void Eat(ABasePiece* Lived, ABasePiece* Dead);
 
 };

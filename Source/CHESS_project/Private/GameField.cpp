@@ -335,7 +335,7 @@ void AGameField::Update(ABasePiece* Piece, ATile* NewTile)
 	NewTile->Status = ETileStatus::OCCUPIED;
 }
 
-void AGameField::Discoloration(TArray<FVector2D> TilesColorated)
+void AGameField::Discoloration()
 {
 	for (int32 x = 0; x < Size; x++) {
 		for (int32 y = 0; y < Size; y++) {
@@ -603,6 +603,13 @@ TArray<FVector2D> AGameField::KingMoves(ENamePiece Nome, int32 proprietario, FVe
 
 
 	return LegalMoves;
+}
+
+void AGameField::Eaten(ABasePiece* Lived, ABasePiece* Dead)
+{
+	ATile* EndTile = *TileMap.Find(FVector2D(Dead->PieceGridPosition));
+	Dead->Destroy();
+	Update(Lived, EndTile);
 }
 
 
