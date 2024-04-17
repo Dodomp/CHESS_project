@@ -15,7 +15,8 @@ ATower::ATower(): ABasePiece()
 
 TArray<FVector2D> ATower::PossibleMoves()
 {
-	return GameField->HighlightMoves(Name, PlayerOwner, GetGridPosition(), false);
+	TArray<FVector2D> Moves = GameField->HighlightMoves(Name, PlayerOwner, GetGridPosition(),false);
+	return Moves;
 
 
 

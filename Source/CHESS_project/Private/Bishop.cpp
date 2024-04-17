@@ -15,7 +15,8 @@ ABishop::ABishop(): ABasePiece()
 
 TArray<FVector2D> ABishop::PossibleMoves()
 {
-	return GameField->HighlightMoves(Name, PlayerOwner, GetGridPosition(), false);
+	TArray<FVector2D> Moves = GameField->HighlightMoves(Name, PlayerOwner, GetGridPosition(), false);
+	return Moves;
 }
 
 // Called when the game starts or when spawned

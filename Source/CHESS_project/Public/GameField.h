@@ -39,6 +39,13 @@ public:
 	UPROPERTY(Transient)
 		TMap<FVector2D, ATile*> TileMap;
 
+	UPROPERTY(Transient)
+		TArray<ABasePiece*> PieceArray;
+
+	UPROPERTY(Transient)
+		TArray<FVector2D>KingGridPosition;
+
+
 
 
 	static const int32 NOT_ASSIGNED = -1;
@@ -111,6 +118,7 @@ public:
 	// return the array of tile pointers
 	TArray<ATile*>& GetTileArray();
 
+
 	// return a relative position given (x,y) position
 	FVector GetRelativeLocationByXYPosition(const int32 InX, const int32 InY) const;
 
@@ -138,6 +146,10 @@ public:
 
 	void Update(ABasePiece* Piece, ATile* Tile);
 
+	void SwapTile(ABasePiece* Piece, ATile* StartTile, ATile* EndTile);
+
+	void RollBack(ABasePiece* Piece, ATile* StartTile, ATile* EndTile, int32 proprietario);
+
 	void Discoloration();
 
 	TArray<FVector2D> PawnMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
@@ -153,6 +165,8 @@ public:
 	TArray<FVector2D> KingMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
 
 	void Eaten(ABasePiece* Lived, ABasePiece* Dead);
+
+	TArray<FVector2D> LegalMoves(ABasePiece* Piece);
 
 
 

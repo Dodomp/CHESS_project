@@ -57,4 +57,6 @@ public:
 	
 	void Eat(ABasePiece* Lived, ABasePiece* Dead);
 
+	TArray<FVector2D> FindLegalMoves(ABasePiece* Piece);
+
 };

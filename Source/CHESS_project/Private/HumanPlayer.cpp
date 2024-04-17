@@ -94,7 +94,13 @@ void AHumanPlayer::OnClick()
 			
 			if (CurrPiece->PlayerOwner == GameMode->CurrentPlayer) {
 				TempPiece = CurrPiece;
-				TempMoves = TempPiece->PossibleMoves();
+				//TempMoves = TempPiece->PossibleMoves();
+				//faccio il controllo e tolgo le mosse che potrebbero mettere in scacco il re
+				TempMoves = FindLegalMoves(TempPiece);
+				CurrPiece->GameField->PaintTiles(TempMoves);
+
+
+
 			}
 			
 			if (CurrPiece != TempPiece && TempPiece != nullptr && CurrPiece->PlayerOwner != GameMode->CurrentPlayer) {
@@ -147,4 +153,9 @@ void AHumanPlayer::Eat(ABasePiece* Lived, ABasePiece* Dead)
 	TempMoves.Empty();
 	TempPiece = nullptr;
 
+}
+
+TArray<FVector2D> AHumanPlayer::FindLegalMoves(ABasePiece* Piece)
+{
+	return Piece->GameField->LegalMoves(Piece);
 }

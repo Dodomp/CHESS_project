@@ -15,7 +15,8 @@ AKing::AKing(): ABasePiece()
 
 TArray<FVector2D> AKing::PossibleMoves()
 {
-	return GameField->HighlightMoves(Name, PlayerOwner, GetGridPosition(), false);
+	TArray<FVector2D> Moves = GameField->HighlightMoves(Name, PlayerOwner, GetGridPosition(), false);
+	return Moves;
 }
 
 // Called when the game starts or when spawned
