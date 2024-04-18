@@ -36,4 +36,9 @@ public:
 	virtual void OnWin() override;
 	virtual void OnLose() override;
 
+	ABasePiece* GetRandomBlackPiece(ACHESS_GameMode* GameMode);
+
+	FVector2D GetRandomMove(TArray<FVector2D> Moves);
+
+
 };

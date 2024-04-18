@@ -43,6 +43,10 @@ public:
 		TArray<ABasePiece*> PieceArray;
 
 	UPROPERTY(Transient)
+		TArray<ABasePiece*> BlackPieceArray;
+
+
+	UPROPERTY(Transient)
 		TArray<FVector2D>KingGridPosition;
 
 

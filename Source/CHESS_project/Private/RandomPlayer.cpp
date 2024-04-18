@@ -34,45 +34,107 @@ void ARandomPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void ARandomPlayer::OnTurn()
 {
-	/*GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Turn"));
-	//GameInstance->SetTurnMessage(TEXT("AI (Random) Turn"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Turn"));
+	GameInstance->SetTurnMessage(TEXT("AI (Random) Turn"));
 
 	FTimerHandle TimerHandle;
 
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
 		{
-			TArray<ATile*> FreeCells;
 			ACHESS_GameMode* GameMode = (ACHESS_GameMode*)(GetWorld()->GetAuthGameMode());
-			for (auto& CurrTile : GameMode->GField->GetTileArray())
-			{
-				if (CurrTile->GetTileStatus() == ETileStatus::EMPTY)
-				{
-					FreeCells.Add(CurrTile);
-				}
+			AGameField* GField = GameMode->GField;
+			TArray<FVector2D> Moves;
+			ABasePiece* Piece;
+
+			do {
+				//TO DO: estri finche non ne trovi uno con almeno una mossa valida
+				//estraggo a caso un pezzo nero
+				Piece = GetRandomBlackPiece(GameMode);
+
+				//calcolo tutte le mosse del pezzo nero
+				Moves = GField->LegalMoves(Piece);				
+
+			} while (Piece != nullptr && Moves.IsEmpty());
+			
+
+			//estreaggo casualmene una mossa valida
+			//coloro le mosse
+			GField->PaintTiles(Moves);
+			
+			FVector2D EndTile = GetRandomMove(Moves);
+			FVector EndPosition = GField->GetRelativeLocationByXYPosition(EndTile.X, EndTile.Y);
+
+			if (GField->TileMap.FindRef(FVector2D(EndTile))->Status == ETileStatus::OCCUPIED) {
+				//ATile* Dead = GField->TileMap.FindRef(FVector2D(EndTile));
+				ABasePiece* Dead = nullptr;
+				for (int32 i = 0; i < GField->PieceArray.Num(); i++) {
+					if (GField->PieceArray[i]->PieceGridPosition == EndTile) {
+						Dead = GField->PieceArray[i];
+						break;
+					}
+				} 
+				GField->Eaten(Piece, Dead);
+				Piece->SetActorLocation(EndPosition);
+				GField->Discoloration();
+
+				GameMode->SetCellSign(PlayerNumber);
 			}
 
-			if (FreeCells.Num() > 0)
-			{
-				int32 RandIdx = FMath::Rand() % FreeCells.Num();
-				FVector Location = GameMode->GField->GetRelativeLocationByXYPosition((FreeCells[RandIdx])->GetGridPosition()[0], (FreeCells[RandIdx])->GetGridPosition()[1]);
-				FreeCells[RandIdx]->SetTileStatus(PlayerNumber, ETileStatus::OCCUPIED);
+			else {
+				ATile* DestinationTile = GField->TileMap.FindRef(FVector2D(EndTile));
+				GField->Update(Piece, DestinationTile);
+				Piece->SetActorLocation(EndPosition);
+				GField->Discoloration();
 
-				GameMode->SetCellSign(PlayerNumber, Location);
-
-			}
-		}, 3, false);*/
+				GameMode->SetCellSign(PlayerNumber);
+			} 
+	}, 3, false);
 }
 
 void ARandomPlayer::OnWin()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Wins!"));
-	//GameInstance->SetTurnMessage(TEXT("AI Wins!"));
-	//GameInstance->IncrementScoreAiPlayer();
+	GameInstance->SetTurnMessage(TEXT("AI Wins!"));
+	GameInstance->IncrementScoreAiPlayer();
 }
 
 void ARandomPlayer::OnLose()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Loses!"));
-	//GameInstance->SetTurnMessage(TEXT("AI Loses!"));
+	GameInstance->SetTurnMessage(TEXT("AI Loses!"));
 }
+
+
+ABasePiece* ARandomPlayer::GetRandomBlackPiece(ACHESS_GameMode* GameMode)
+{
+	// Assume che BlackPieceArray sia un TArray di tipo desiderato (ad es. TArray<int32> o TArray<classname>)
+	// Deve essere accessibile da questo contesto (ad es. dichiarato come membro di classe)
+	TArray<ABasePiece*> Black = GameMode->GField->BlackPieceArray;
+
+	// Verifica se l'array non è vuoto
+	if (Black.Num() > 0)
+	{
+		// Genera un indice casuale all'interno del range dell'array
+		int32 RandomIndex = FMath::RandRange(0, Black.Num() - 1);
+
+		// Accedi all'elemento casuale
+		return Black[RandomIndex];
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("L'array è vuoto."));
+		return nullptr;
+	}
+}
+
+FVector2D ARandomPlayer::GetRandomMove(TArray<FVector2D> Moves)
+{
+		// Genera un indice casuale all'interno del range dell'array
+		int32 RandomIndex = FMath::RandRange(0, Moves.Num() - 1);
+
+		// Accedi all'elemento casuale
+		return Moves[RandomIndex];
+}
+
+
 

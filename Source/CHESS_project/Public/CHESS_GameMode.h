@@ -55,7 +55,7 @@ public:
 	void ChoosePlayerAndStartGame();
 
 	// set the cell sign and the position 
-	void SetCellSign(const int32 PlayerNumber, const FVector& SpawnPosition);
+	void SetCellSign(const int32 PlayerNumber);
 
 	// get the next player index
 	int32 GetNextPlayer(int32 Player);

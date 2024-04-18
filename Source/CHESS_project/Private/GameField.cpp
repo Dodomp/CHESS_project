@@ -101,6 +101,7 @@ void AGameField::PlacePeaces(int32 InX, int32 InY, AGameField* GF)
 		if (InX == 6) {
 			Piece->PlayerOwner = 1;
 			(*TileMap.Find(FVector2D(InX, InY)))->PlayerOwner = 1;
+			BlackPieceArray.Add(Piece);
 		}
 		Piece->GameField = GF;
 		if (TileMap.Find(FVector2D(InX, InY)) != nullptr) {
@@ -121,6 +122,7 @@ void AGameField::PlacePeaces(int32 InX, int32 InY, AGameField* GF)
 		if (InX == 7) {
 			Piece->PlayerOwner = 1;
 			(*TileMap.Find(FVector2D(InX, InY)))->PlayerOwner = 1;
+			BlackPieceArray.Add(Piece);
 		}
 		Piece->GameField = GF;
 		if (TileMap.Find(FVector2D(InX, InY)) != nullptr) {
@@ -141,6 +143,7 @@ void AGameField::PlacePeaces(int32 InX, int32 InY, AGameField* GF)
 		if (InX == 7) {
 			Piece->PlayerOwner = 1;
 			(*TileMap.Find(FVector2D(InX, InY)))->PlayerOwner = 1;
+			BlackPieceArray.Add(Piece);
 		}
 		Piece->GameField = GF;
 		if (TileMap.Find(FVector2D(InX, InY)) != nullptr) {
@@ -161,6 +164,7 @@ void AGameField::PlacePeaces(int32 InX, int32 InY, AGameField* GF)
 		if (InX == 7) {
 			Piece->PlayerOwner = 1;
 			(*TileMap.Find(FVector2D(InX, InY)))->PlayerOwner = 1;
+			BlackPieceArray.Add(Piece);
 		}
 		Piece->GameField = GF;
 		if (TileMap.Find(FVector2D(InX, InY)) != nullptr) {
@@ -222,6 +226,7 @@ void AGameField::PlacePeaces(int32 InX, int32 InY, AGameField* GF)
 			(*TileMap.Find(FVector2D(InX, InY)))->Status = ETileStatus::OCCUPIED;
 		}
 		PieceArray.Add(Piece);
+		BlackPieceArray.Add(Piece);
 	}
 
 	//Black King
@@ -240,6 +245,7 @@ void AGameField::PlacePeaces(int32 InX, int32 InY, AGameField* GF)
 		}
 		PieceArray.Add(Piece);
 		KingGridPosition.Add(FVector2D(InX, InY));
+		BlackPieceArray.Add(Piece);
 
 	}
 
@@ -710,6 +716,13 @@ void AGameField::Eaten(ABasePiece* Lived, ABasePiece* Dead)
 			PieceArray.Remove(Dead);
 		}
 	}
+	if (Dead->PlayerOwner == 1) {
+		for (int32 i = 0; i < BlackPieceArray.Num(); i++) {
+			if (Dead == BlackPieceArray[i]) {
+				BlackPieceArray.Remove(Dead);
+			}
+		}
+	}
 	Dead->Destroy();
 
 	Update(Lived, EndTile);
@@ -718,6 +731,8 @@ void AGameField::Eaten(ABasePiece* Lived, ABasePiece* Dead)
 TArray<FVector2D> AGameField::LegalMoves(ABasePiece* Piece)
 {
 	TArray<FVector2D> IpoteticalMoves = Piece->PossibleMoves();
+
+	TArray<FVector2D> Legal;
 
 	for (int32 i = 0; i < IpoteticalMoves.Num(); i++) {
 
@@ -741,7 +756,11 @@ TArray<FVector2D> AGameField::LegalMoves(ABasePiece* Piece)
 		RollBack(Piece, EndTile, StartTile, OtherTileOwner);
 	}
 
-	return IpoteticalMoves;
+	for (int32 i = 0; i < IpoteticalMoves.Num(); i++) {
+		if (IpoteticalMoves[i] != FVector2D(-1, -1)) Legal.Add(IpoteticalMoves[i]);
+	}
+
+	return Legal;
 }
 
 

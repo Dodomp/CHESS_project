@@ -69,7 +69,7 @@ void ACHESS_GameMode::ChoosePlayerAndStartGame()
 	Players[CurrentPlayer]->OnTurn();
 }
 
-void ACHESS_GameMode::SetCellSign(const int32 PlayerNumber, const FVector& SpawnPosition)
+void ACHESS_GameMode::SetCellSign(const int32 PlayerNumber)
 {
 	/*if (IsGameOver || PlayerNumber != CurrentPlayer)
 	{
@@ -104,9 +104,9 @@ void ACHESS_GameMode::SetCellSign(const int32 PlayerNumber, const FVector& Spawn
 			}, 3, false);
 	}
 	else
-	{
+	{*/
 		TurnNextPlayer();
-	}*/
+	//}
 }
 
 int32 ACHESS_GameMode::GetNextPlayer(int32 Player)
@@ -121,7 +121,7 @@ int32 ACHESS_GameMode::GetNextPlayer(int32 Player)
 
 void ACHESS_GameMode::TurnNextPlayer()
 {
-	MoveCounter += 1;
+	//MoveCounter += 1;
 	CurrentPlayer = GetNextPlayer(CurrentPlayer);
 	Players[CurrentPlayer]->OnTurn();
 }

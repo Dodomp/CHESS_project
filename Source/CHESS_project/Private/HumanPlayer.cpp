@@ -64,14 +64,14 @@ void AHumanPlayer::OnTurn()
 void AHumanPlayer::OnWin()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("You Win!"));
-	//GameInstance->SetTurnMessage(TEXT("Human Wins!"));
-	//GameInstance->IncrementScoreHumanPlayer();
+	GameInstance->SetTurnMessage(TEXT("Human Wins!"));
+	GameInstance->IncrementScoreHumanPlayer();
 }
 
 void AHumanPlayer::OnLose()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("You Lose!"));
-	//GameInstance->SetTurnMessage(TEXT("Human Loses!"));
+	GameInstance->SetTurnMessage(TEXT("Human Loses!"));
 }
 
 void AHumanPlayer::OnClick()
@@ -106,6 +106,8 @@ void AHumanPlayer::OnClick()
 			if (CurrPiece != TempPiece && TempPiece != nullptr && CurrPiece->PlayerOwner != GameMode->CurrentPlayer) {
 				
 				Eat(TempPiece, CurrPiece);
+				GameMode->SetCellSign(PlayerNumber);
+				IsMyTurn = false;
 			}
 			
 		}
@@ -120,11 +122,12 @@ void AHumanPlayer::OnClick()
 					DeleteSuggestion(TempPiece);
 					TempMoves.Empty();
 					TempPiece = nullptr;
+					GameMode->SetCellSign(PlayerNumber);
+					IsMyTurn = false;
 					
 				}
 			}
 		}
-		//if ()
 	}
 }
 
