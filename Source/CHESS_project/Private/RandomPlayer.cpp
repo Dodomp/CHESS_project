@@ -34,61 +34,77 @@ void ARandomPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 void ARandomPlayer::OnTurn()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Turn"));
-	GameInstance->SetTurnMessage(TEXT("AI (Random) Turn"));
+	ACHESS_GameMode* GameMode = (ACHESS_GameMode*)(GetWorld()->GetAuthGameMode());
+	if (!GameMode->GField->isCheckMate(PlayerNumber)) {
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AI (Random) Turn"));
+			GameInstance->SetTurnMessage(TEXT("AI (Random) Turn"));
 
-	FTimerHandle TimerHandle;
+			FTimerHandle TimerHandle;
 
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
-		{
-			ACHESS_GameMode* GameMode = (ACHESS_GameMode*)(GetWorld()->GetAuthGameMode());
-			AGameField* GField = GameMode->GField;
-			TArray<FVector2D> Moves;
-			ABasePiece* Piece;
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
+			{
+					ACHESS_GameMode* GameMode = (ACHESS_GameMode*)(GetWorld()->GetAuthGameMode());
+					AGameField* GField = GameMode->GField;
+					TArray<FVector2D> Moves;
+					ABasePiece* Piece;
 
-			do {
-				//TO DO: estri finche non ne trovi uno con almeno una mossa valida
-				//estraggo a caso un pezzo nero
-				Piece = GetRandomBlackPiece(GameMode);
+					do {
+						//TO DO: estri finche non ne trovi uno con almeno una mossa valida
+						//estraggo a caso un pezzo nero
+						Piece = GetRandomBlackPiece(GameMode);
 
-				//calcolo tutte le mosse del pezzo nero
-				Moves = GField->LegalMoves(Piece);				
+						//calcolo tutte le mosse del pezzo nero
+						Moves = GField->LegalMoves(Piece);
 
-			} while (Piece != nullptr && Moves.IsEmpty());
-			
+					} while (Piece != nullptr && Moves.IsEmpty());
 
-			//estreaggo casualmene una mossa valida
-			//coloro le mosse
-			GField->PaintTiles(Moves);
-			
-			FVector2D EndTile = GetRandomMove(Moves);
-			FVector EndPosition = GField->GetRelativeLocationByXYPosition(EndTile.X, EndTile.Y);
 
-			if (GField->TileMap.FindRef(FVector2D(EndTile))->Status == ETileStatus::OCCUPIED) {
-				//ATile* Dead = GField->TileMap.FindRef(FVector2D(EndTile));
-				ABasePiece* Dead = nullptr;
-				for (int32 i = 0; i < GField->PieceArray.Num(); i++) {
-					if (GField->PieceArray[i]->PieceGridPosition == EndTile) {
-						Dead = GField->PieceArray[i];
-						break;
+					//estreaggo casualmene una mossa valida
+					//coloro le mosse
+					GField->PaintTiles(Moves);
+
+					FVector2D EndTile = GetRandomMove(Moves);
+					FVector EndPosition = GField->GetRelativeLocationByXYPosition(EndTile.X, EndTile.Y);
+
+					if (GField->TileMap.FindRef(FVector2D(EndTile))->Status == ETileStatus::OCCUPIED) {
+						//ATile* Dead = GField->TileMap.FindRef(FVector2D(EndTile));
+						ABasePiece* Dead = nullptr;
+						for (int32 i = 0; i < GField->PieceArray.Num(); i++) {
+							if (GField->PieceArray[i]->PieceGridPosition == EndTile) {
+								Dead = GField->PieceArray[i];
+								break;
+							}
+						}
+						GField->Eaten(Piece, Dead);
+						Piece->SetActorLocation(EndPosition);
+						GField->Discoloration();
+
+						GameMode->TurnNextPlayer();
+						
 					}
-				} 
-				GField->Eaten(Piece, Dead);
-				Piece->SetActorLocation(EndPosition);
-				GField->Discoloration();
 
-				GameMode->SetCellSign(PlayerNumber);
+					else {
+						ATile* DestinationTile = GField->TileMap.FindRef(FVector2D(EndTile));
+						GField->Update(Piece, DestinationTile);
+						Piece->SetActorLocation(EndPosition);
+						GField->Discoloration();
+
+						GameMode->TurnNextPlayer();
+						
+					}
+			}, 3, false);
+
+	}
+	else {
+		OnLose();
+		for (int32 i = 0; i < GameMode->Players.Num(); i++)
+		{
+			if (i != GameMode->CurrentPlayer)
+			{
+				GameMode->Players[i]->OnWin();
 			}
-
-			else {
-				ATile* DestinationTile = GField->TileMap.FindRef(FVector2D(EndTile));
-				GField->Update(Piece, DestinationTile);
-				Piece->SetActorLocation(EndPosition);
-				GField->Discoloration();
-
-				GameMode->SetCellSign(PlayerNumber);
-			} 
-	}, 3, false);
+		}
+	}
 }
 
 void ARandomPlayer::OnWin()

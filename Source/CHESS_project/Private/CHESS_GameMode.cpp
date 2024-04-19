@@ -58,7 +58,7 @@ void ACHESS_GameMode::BeginPlay()
 
 void ACHESS_GameMode::ChoosePlayerAndStartGame()
 {
-	CurrentPlayer = FMath::RandRange(0, Players.Num() - 1);
+	//CurrentPlayer = FMath::RandRange(0, Players.Num() - 1);
 
 	for (int32 i = 0; i < Players.Num(); i++)
 	{
@@ -66,7 +66,7 @@ void ACHESS_GameMode::ChoosePlayerAndStartGame()
 		Players[i]->Color = i == CurrentPlayer ? EColor::White : EColor::Black;
 	}
 	MoveCounter += 1;
-	Players[CurrentPlayer]->OnTurn();
+	Players[0]->OnTurn();
 }
 
 void ACHESS_GameMode::SetCellSign(const int32 PlayerNumber)

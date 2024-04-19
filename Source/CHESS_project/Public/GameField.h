@@ -172,6 +172,8 @@ public:
 
 	TArray<FVector2D> LegalMoves(ABasePiece* Piece);
 
+	bool isCheckMate(int32 Player);
+
 
 
 };

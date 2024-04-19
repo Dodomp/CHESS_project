@@ -763,6 +763,18 @@ TArray<FVector2D> AGameField::LegalMoves(ABasePiece* Piece)
 	return Legal;
 }
 
+bool AGameField::isCheckMate(int32 Player)
+{
+	for (int32 i = 0; i < PieceArray.Num(); i++) {
+		if (PieceArray[i]->PlayerOwner == Player) {
+			if (!LegalMoves(PieceArray[i]).IsEmpty()) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 
 
 

@@ -84,51 +84,68 @@ void AHumanPlayer::OnClick()
 	FHitResult Hit = FHitResult(ForceInit);
 	// GetHitResultUnderCursor function sends a ray from the mouse position and gives the corresponding hit results
 	GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursor(ECollisionChannel::ECC_Pawn, true, Hit);
-	if (Hit.bBlockingHit && IsMyTurn)
-	{
-		if (ABasePiece* CurrPiece = Cast<ABasePiece>(Hit.GetActor())) {
-
-			if (CurrPiece != TempPiece && TempPiece != nullptr && CurrPiece->PlayerOwner == GameMode->CurrentPlayer) {
-				DeleteSuggestion(TempPiece);
-			}
-			
-			if (CurrPiece->PlayerOwner == GameMode->CurrentPlayer) {
-				TempPiece = CurrPiece;
-				//TempMoves = TempPiece->PossibleMoves();
-				//faccio il controllo e tolgo le mosse che potrebbero mettere in scacco il re
-				TempMoves = FindLegalMoves(TempPiece);
-				CurrPiece->GameField->PaintTiles(TempMoves);
-
-
-
-			}
-			
-			if (CurrPiece != TempPiece && TempPiece != nullptr && CurrPiece->PlayerOwner != GameMode->CurrentPlayer) {
-				
-				Eat(TempPiece, CurrPiece);
-				GameMode->SetCellSign(PlayerNumber);
-				IsMyTurn = false;
-			}
-			
-		}
-		if (ATile* CurrTile = Cast<ATile>(Hit.GetActor()))
+	if (!GameMode->GField->isCheckMate(PlayerNumber)) {
+		if (Hit.bBlockingHit && IsMyTurn)
 		{
-			if (TempMoves.Find(FVector2D(CurrTile->GetGridPosition())) != INDEX_NONE) {
-				if (TempPiece != nullptr) {
-					AGameField* GF = TempPiece->GameField;
-					FVector EndPosition = GF->GetRelativeLocationByXYPosition(CurrTile->GetGridPosition().X, CurrTile->GetGridPosition().Y);
-					UpdateTiles(TempPiece, CurrTile);
-					TempPiece->SetActorLocation(EndPosition);
+			if (GameMode->GField->isCheckMate(PlayerNumber)) {
+
+			}
+			if (ABasePiece* CurrPiece = Cast<ABasePiece>(Hit.GetActor())) {
+
+				if (CurrPiece != TempPiece && TempPiece != nullptr && CurrPiece->PlayerOwner == GameMode->CurrentPlayer) {
 					DeleteSuggestion(TempPiece);
-					TempMoves.Empty();
-					TempPiece = nullptr;
+				}
+
+				if (CurrPiece->PlayerOwner == GameMode->CurrentPlayer) {
+					TempPiece = CurrPiece;
+					//TempMoves = TempPiece->PossibleMoves();
+					//faccio il controllo e tolgo le mosse che potrebbero mettere in scacco il re
+					TempMoves = FindLegalMoves(TempPiece);
+					CurrPiece->GameField->PaintTiles(TempMoves);
+
+
+
+				}
+
+				if (CurrPiece != TempPiece && TempPiece != nullptr && CurrPiece->PlayerOwner != GameMode->CurrentPlayer) {
+
+					Eat(TempPiece, CurrPiece);
 					GameMode->SetCellSign(PlayerNumber);
 					IsMyTurn = false;
-					
+				}
+
+			}
+			if (ATile* CurrTile = Cast<ATile>(Hit.GetActor()))
+			{
+				if (TempMoves.Find(FVector2D(CurrTile->GetGridPosition())) != INDEX_NONE) {
+					if (TempPiece != nullptr) {
+						AGameField* GF = TempPiece->GameField;
+						FVector EndPosition = GF->GetRelativeLocationByXYPosition(CurrTile->GetGridPosition().X, CurrTile->GetGridPosition().Y);
+						UpdateTiles(TempPiece, CurrTile);
+						TempPiece->SetActorLocation(EndPosition);
+						DeleteSuggestion(TempPiece);
+						TempMoves.Empty();
+						TempPiece = nullptr;
+						GameMode->TurnNextPlayer();
+						IsMyTurn = false;
+
+					}
 				}
 			}
 		}
 	}
+
+	else {
+		OnLose();
+		for (int32 i = 0; i < GameMode->Players.Num(); i++)
+		{
+			if (i != GameMode->CurrentPlayer)
+			{
+				GameMode->Players[i]->OnWin();
+			}
+		}
+	}
+	
 }
 
 void AHumanPlayer::UpdateTiles(ABasePiece* Piece, ATile* Tile) {
