@@ -44,6 +44,7 @@ void AThePawn::BeginPlay()
 TArray<FVector2D> AThePawn::PossibleMoves()
 {
     TArray<FVector2D> Moves = GameField->HighlightMoves(Name, PlayerOwner, GetGridPosition(), HasMoved);
+   
     return Moves;
 }
 

@@ -87,9 +87,6 @@ void AHumanPlayer::OnClick()
 	if (!GameMode->GField->isCheckMate(PlayerNumber)) {
 		if (Hit.bBlockingHit && IsMyTurn)
 		{
-			if (GameMode->GField->isCheckMate(PlayerNumber)) {
-
-			}
 			if (ABasePiece* CurrPiece = Cast<ABasePiece>(Hit.GetActor())) {
 
 				if (CurrPiece != TempPiece && TempPiece != nullptr && CurrPiece->PlayerOwner == GameMode->CurrentPlayer) {
@@ -108,10 +105,12 @@ void AHumanPlayer::OnClick()
 				}
 
 				if (CurrPiece != TempPiece && TempPiece != nullptr && CurrPiece->PlayerOwner != GameMode->CurrentPlayer) {
-
-					Eat(TempPiece, CurrPiece);
-					GameMode->SetCellSign(PlayerNumber);
-					IsMyTurn = false;
+					if (TempMoves.Find(CurrPiece->PieceGridPosition) != INDEX_NONE) {
+						Eat(TempPiece, CurrPiece);
+						GameMode->SetCellSign(PlayerNumber);
+						IsMyTurn = false;
+					}
+					
 				}
 
 			}
