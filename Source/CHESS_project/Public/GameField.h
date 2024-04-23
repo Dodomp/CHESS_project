@@ -174,6 +174,8 @@ public:
 
 	bool isCheckMate(int32 Player);
 
+	void Promotion(ABasePiece* Piece);
+
 
 
 };

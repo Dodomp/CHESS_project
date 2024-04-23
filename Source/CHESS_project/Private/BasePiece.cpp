@@ -24,6 +24,8 @@ ABasePiece::ABasePiece()
 	//centrata nell'origine degli assi
 	PieceGridPosition = FVector2D(0, 0);
 
+	HasMoved = false;
+
 
 }
 

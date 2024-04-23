@@ -77,6 +77,10 @@ void ARandomPlayer::OnTurn()
 						}
 						GField->Eaten(Piece, Dead);
 						Piece->SetActorLocation(EndPosition);
+						if (Piece->Name == ENamePiece::PAWN) {
+							Piece->HasMoved = true;
+							GField->Promotion(Piece);
+						}
 						GField->Discoloration();
 
 						GameMode->TurnNextPlayer();
@@ -87,6 +91,10 @@ void ARandomPlayer::OnTurn()
 						ATile* DestinationTile = GField->TileMap.FindRef(FVector2D(EndTile));
 						GField->Update(Piece, DestinationTile);
 						Piece->SetActorLocation(EndPosition);
+						if (Piece->Name == ENamePiece::PAWN) {
+							Piece->HasMoved = true;
+							GField->Promotion(Piece);
+						}
 						GField->Discoloration();
 
 						GameMode->TurnNextPlayer();

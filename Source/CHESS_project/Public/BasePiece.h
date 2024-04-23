@@ -46,6 +46,8 @@ public:
 
 	ENamePiece Name;
 
+	bool HasMoved;
+
 	void SetGridPosition(const double InX, const double InY);
 
 	void SetPlayerOwner(const int32 TileOwner);

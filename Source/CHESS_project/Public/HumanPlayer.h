@@ -59,4 +59,6 @@ public:
 
 	TArray<FVector2D> FindLegalMoves(ABasePiece* Piece);
 
+	void isPromotion(ABasePiece* Piece);
+
 };

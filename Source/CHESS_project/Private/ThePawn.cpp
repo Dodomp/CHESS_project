@@ -10,7 +10,6 @@ AThePawn::AThePawn() : ABasePiece()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	//PrimaryActorTick.bCanEverTick = true;
-	HasMoved = false;
 
     Name = ENamePiece::PAWN;
 
@@ -44,7 +43,6 @@ void AThePawn::BeginPlay()
 TArray<FVector2D> AThePawn::PossibleMoves()
 {
     TArray<FVector2D> Moves = GameField->HighlightMoves(Name, PlayerOwner, GetGridPosition(), HasMoved);
-   
     return Moves;
 }
 

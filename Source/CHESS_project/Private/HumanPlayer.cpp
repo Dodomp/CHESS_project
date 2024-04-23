@@ -122,6 +122,10 @@ void AHumanPlayer::OnClick()
 						FVector EndPosition = GF->GetRelativeLocationByXYPosition(CurrTile->GetGridPosition().X, CurrTile->GetGridPosition().Y);
 						UpdateTiles(TempPiece, CurrTile);
 						TempPiece->SetActorLocation(EndPosition);
+						if (TempPiece->Name == ENamePiece::PAWN) {
+							TempPiece->HasMoved = true;
+							isPromotion(TempPiece);
+						}
 						DeleteSuggestion(TempPiece);
 						TempMoves.Empty();
 						TempPiece = nullptr;
@@ -168,6 +172,9 @@ void AHumanPlayer::Eat(ABasePiece* Lived, ABasePiece* Dead)
 	FVector EndPosition = GF->GetRelativeLocationByXYPosition(Dead->GetGridPosition().X, Dead->GetGridPosition().Y);
 	GF->Eaten(Lived, Dead);
 	TempPiece->SetActorLocation(EndPosition);
+	if (TempPiece->Name == ENamePiece::PAWN) {
+		isPromotion(TempPiece);
+	}
 	DeleteSuggestion(TempPiece);
 	TempMoves.Empty();
 	TempPiece = nullptr;
@@ -177,4 +184,9 @@ void AHumanPlayer::Eat(ABasePiece* Lived, ABasePiece* Dead)
 TArray<FVector2D> AHumanPlayer::FindLegalMoves(ABasePiece* Piece)
 {
 	return Piece->GameField->LegalMoves(Piece);
+}
+
+void AHumanPlayer::isPromotion(ABasePiece* Piece)
+{
+	Piece->GameField->Promotion(Piece);
 }

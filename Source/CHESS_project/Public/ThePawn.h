@@ -24,7 +24,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	bool HasMoved;
 
 	//void ApplyMaterial (bool value) override;
 
