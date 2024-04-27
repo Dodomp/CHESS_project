@@ -46,6 +46,7 @@ public:
 		TArray<ABasePiece*> BlackPieceArray;
 
 
+	//in any moment I can find the black and white kings
 	UPROPERTY(Transient)
 		TArray<FVector2D>KingGridPosition;
 
@@ -54,10 +55,6 @@ public:
 
 	static const int32 NOT_ASSIGNED = -1;
 
-	// BlueprintAssignable Usable with Multicast Delegates only. Exposes the property for assigning in Blueprints.
-	// declare a variable of type FOnReset (delegate)
-	//UPROPERTY(BlueprintAssignable)
-		//FOnReset OnResetEvent;
 
 	// size of field
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -114,6 +111,7 @@ public:
 	// generate an empty game field
 	void GenerateField();
 
+	// this method places all pieces at very start of the game
 	void PlacePeaces(int32 InX, int32 InY, AGameField* GF);
 
 	// return a (x,y) position given a hit (click) on a field tile
@@ -129,32 +127,32 @@ public:
 	// return (x,y) position given a relative position
 	FVector2D GetXYPositionByRelativeLocation(const FVector& Location) const;
 
-	// check if a position is a win position
-	//bool IsWinPosition(const FVector2D Position) const;
-
-	// check if is a win line
-	//inline bool IsWinLine(const FVector2D Begin, const FVector2D End) const;
 
 	// checking if is a valid field position
 	inline bool IsValidPosition(const FVector2D Position) const;
 
-	// get a line given a begin and end positions
-	//TArray<int32> GetLine(const FVector2D Begin, const FVector2D End) const;
-
-	// check if a line contains all equal elements
-	//bool AllEqual(const TArray<int32>& Array) const;
-
+	
+	//this method allow to change material when the player  selects a piece and visualizes all legal moves
 	void PaintTiles(TArray<FVector2D> moves);
 
+	// this method calculate legal moves for each each peach
 	TArray<FVector2D> HighlightMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
 
+	//when the player move his peace the new tile will became OCCUPIED as well as the player owner of tile.
+	//It also update the PieceGridPosition of Piece and the KingGridPosition if required
 	void Update(ABasePiece* Piece, ATile* Tile);
 
+	//Method simulates one of the all legal moves of piece
 	void SwapTile(ABasePiece* Piece, ATile* StartTile, ATile* EndTile);
 
+	//After a simulation this method restores the old situation
 	void RollBack(ABasePiece* Piece, ATile* StartTile, ATile* EndTile, int32 proprietario);
 
+
+	//This method deletes all suggest and colors all tile in white and black
 	void Discoloration();
+
+	//Theese methods find all possible moves which different piecese are able to do
 
 	TArray<FVector2D> PawnMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
 
@@ -168,12 +166,17 @@ public:
 
 	TArray<FVector2D> KingMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove);
 
+
+	//This method allow to capture a piece
 	void Eaten(ABasePiece* Lived, ABasePiece* Dead);
 
+	//After finding all possible moves for a picese, I delete all illegal moves such as a moves which puts the king in check situation
 	TArray<FVector2D> LegalMoves(ABasePiece* Piece);
 
+	//at the start of every turn this method controll if the current player is in chackmate situation
 	bool isCheckMate(int32 Player);
-
+	
+	//When a pawn reach the end of game field, it transforms in a Queen
 	void Promotion(ABasePiece* Piece);
 
 

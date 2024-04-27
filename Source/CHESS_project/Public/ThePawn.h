@@ -25,7 +25,7 @@ protected:
 
 public:
 
-	//void ApplyMaterial (bool value) override;
+	
 
 	TArray<FVector2D> PossibleMoves() override;
 

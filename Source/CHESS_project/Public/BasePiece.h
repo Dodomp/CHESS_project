@@ -54,9 +54,12 @@ public:
 
 	void SetGameField(AGameField* GF);
 
+
+	//this function changes material to a piece (balck or white)
 	UFUNCTION(BlueprintCallable)
 	void ApplyMaterial(bool value);
-	
+
+	//this vitual function permitts to find all possible and legal moves for each pieces
 	virtual TArray<FVector2D> PossibleMoves();
 
 

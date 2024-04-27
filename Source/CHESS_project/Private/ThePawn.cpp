@@ -23,22 +23,7 @@ void AThePawn::BeginPlay()
 }
 
 
-/*void AThePawn::ApplyMaterial(bool value)
-{
-    if (value == false) {
-        
-                  StaticMeshComponent->SetMaterial(0, White);
 
-    }
-    else { 
-        if (StaticMeshComponent) {
-            Black = LoadObject<UMaterialInterface>(nullptr, TEXT(" /Game/ Materials/ M_PB"));
-            if (Black) {
-                StaticMeshComponent->SetMaterial(0, Black);
-            }
-        }
-    }   
-}*/
 
 TArray<FVector2D> AThePawn::PossibleMoves()
 {

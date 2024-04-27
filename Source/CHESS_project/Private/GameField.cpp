@@ -741,6 +741,17 @@ TArray<FVector2D> AGameField::LegalMoves(ABasePiece* Piece)
 		//simulo la mossa del pezzo che ho preso
 		ATile* StartTile = (*TileMap.Find(FVector2D(Piece->PieceGridPosition)));
 		ATile* EndTile = (*TileMap.Find(FVector2D(IpoteticalMoves[i])));
+		ABasePiece* temp = nullptr;
+		if (EndTile->PlayerOwner != Piece->PlayerOwner) {
+			for (int32 k = 0; k < PieceArray.Num(); k++) {
+				if (PieceArray[k]->PieceGridPosition == EndTile->TileGridPosition) {
+					temp = PieceArray[k];
+					PieceArray.RemoveAt(i);
+					break;
+					
+				}
+			}
+		}
 		int32 OtherTileOwner = EndTile->PlayerOwner;
 		SwapTile(Piece, StartTile, EndTile);
 
@@ -756,6 +767,9 @@ TArray<FVector2D> AGameField::LegalMoves(ABasePiece* Piece)
 		}
 
 		RollBack(Piece, EndTile, StartTile, OtherTileOwner);
+		if (temp != nullptr) {
+			PieceArray.Add(temp);
+		}
 	}
 
 	for (int32 i = 0; i < IpoteticalMoves.Num(); i++) {
