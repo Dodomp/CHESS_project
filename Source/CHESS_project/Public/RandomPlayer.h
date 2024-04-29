@@ -36,8 +36,10 @@ public:
 	virtual void OnWin() override;
 	virtual void OnLose() override;
 
+	//retun a rando black piece, only constrain is that the piece has almost one legal moves
 	ABasePiece* GetRandomBlackPiece(ACHESS_GameMode* GameMode);
 
+	//return one randome legal moves
 	FVector2D GetRandomMove(TArray<FVector2D> Moves);
 
 

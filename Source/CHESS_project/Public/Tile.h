@@ -69,22 +69,17 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		FVector2D TileGridPosition;
 
+	//material for white tile
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
 		UMaterialInterface* White;
 
+	//material for black tile
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
 		UMaterialInterface* Black;
 
+	//material for suggested tiles
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Material")
 		UMaterialInterface* Green;
 
-	
-
-
-
-
-//public:	
-	// Called every frame
-	//virtual void Tick(float DeltaTime) override;
 
 };

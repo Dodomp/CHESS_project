@@ -42,21 +42,7 @@ void AGameField::BeginPlay()
 
 }
 
-void AGameField::ResetField()
-{
-	//for (ATile* Obj : TileArray)
-	//{
-	//	Obj->SetTileStatus(NOT_ASSIGNED, ETileStatus::EMPTY);
-	//}
 
-	//// send broadcast event to registered objects 
-	//OnResetEvent.Broadcast();
-
-	//ATTT_GameMode* GameMode = Cast<ATTT_GameMode>(GetWorld()->GetAuthGameMode());
-	//GameMode->IsGameOver = false;
-	//GameMode->MoveCounter = 0;
-	//GameMode->ChoosePlayerAndStartGame();
-}
 
 void AGameField::GenerateField()
 {
@@ -746,7 +732,7 @@ TArray<FVector2D> AGameField::LegalMoves(ABasePiece* Piece)
 			for (int32 k = 0; k < PieceArray.Num(); k++) {
 				if (PieceArray[k]->PieceGridPosition == EndTile->TileGridPosition) {
 					temp = PieceArray[k];
-					PieceArray.RemoveAt(i);
+					PieceArray.RemoveAt(k);
 					break;
 					
 				}

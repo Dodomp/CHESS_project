@@ -16,6 +16,8 @@ public:
 	// Sets default values for this pawn's properties
 	ABishop();
 
+
+	//
 	TArray<FVector2D> PossibleMoves() override;
 
 protected:

@@ -10,7 +10,7 @@
 #include "BasePiece.generated.h"
 
 
-
+//Every Piece has a name
 UENUM()
 enum class ENamePiece : uint8
 {
@@ -40,8 +40,10 @@ public:
 
 	FVector2D GetGridPosition();
 
+	//every piece has a reference to GameField
 	AGameField* GameField;
 
+	//Every piece has an array of possible moves, initially empty
 	TArray<FVector2D> SuggestMoves;
 
 	ENamePiece Name;

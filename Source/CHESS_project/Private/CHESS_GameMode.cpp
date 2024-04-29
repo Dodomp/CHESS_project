@@ -58,7 +58,6 @@ void ACHESS_GameMode::BeginPlay()
 
 void ACHESS_GameMode::ChoosePlayerAndStartGame()
 {
-	//CurrentPlayer = FMath::RandRange(0, Players.Num() - 1);
 
 	for (int32 i = 0; i < Players.Num(); i++)
 	{
@@ -71,42 +70,8 @@ void ACHESS_GameMode::ChoosePlayerAndStartGame()
 
 void ACHESS_GameMode::SetCellSign(const int32 PlayerNumber)
 {
-	/*if (IsGameOver || PlayerNumber != CurrentPlayer)
-	{
-		return;
-	}
-
-	UClass* SignActor = Players[CurrentPlayer]->Sign == ESign::X ? SignXActor : SignOActor;
-	FVector Location = GField->GetActorLocation() + SpawnPosition + FVector(0, 0, 10);
-	GetWorld()->SpawnActor(SignActor, &Location);
-
-	if (GField->IsWinPosition(GField->GetXYPositionByRelativeLocation(SpawnPosition)))
-	{
-		IsGameOver = true;
-		Players[CurrentPlayer]->OnWin();
-		for (int32 i = 0; i < Players.Num(); i++)
-		{
-			if (i != CurrentPlayer)
-			{
-				Players[i]->OnLose();
-			}
-		}
-	}
-	else if (MoveCounter == (FieldSize * FieldSize))
-	{
-		// add a timer (3 seconds)
-		FTimerHandle TimerHandle;
-
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
-			{
-				// function to delay
-				GField->ResetField();
-			}, 3, false);
-	}
-	else
-	{*/
+	
 		TurnNextPlayer();
-	//}
 }
 
 int32 ACHESS_GameMode::GetNextPlayer(int32 Player)
