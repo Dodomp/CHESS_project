@@ -39,9 +39,11 @@ public:
 	UPROPERTY(Transient)
 		TMap<FVector2D, ATile*> TileMap;
 
+	//Array with all pieces
 	UPROPERTY(Transient)
 		TArray<ABasePiece*> PieceArray;
 
+	//array with only balck pieces
 	UPROPERTY(Transient)
 		TArray<ABasePiece*> BlackPieceArray;
 
@@ -63,26 +65,26 @@ public:
 
 
 	// TSubclassOf template class that provides UClass type safety
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 		TSubclassOf<ATile> TileClass;
 
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 		TSubclassOf<AThePawn> PawnClass;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 		TSubclassOf<ATower> TowerClass;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 		TSubclassOf<AKnight> KnightClass;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 		TSubclassOf<ABishop> BishopClass;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 		TSubclassOf<AQueen> QueenClass;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 		TSubclassOf<AKing> KingClass;
 
 

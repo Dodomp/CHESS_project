@@ -29,7 +29,7 @@ void ACHESS_GameMode::BeginPlay()
 	{
 		GField = GetWorld()->SpawnActor<AGameField>(GameFieldClass);
 		GField->Size = FieldSize;
-		GField->GenerateField();
+		//GField->GenerateField();
 	}
 	else
 	{

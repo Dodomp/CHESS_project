@@ -8,7 +8,7 @@
 #include "Bishop.h"
 #include "Queen.h"
 #include "King.h"
-// "BasePiece.h"
+#include "BasePiece.h"
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -38,7 +38,7 @@ void AGameField::OnConstruction(const FTransform& Transform)
 void AGameField::BeginPlay()
 {
 	Super::BeginPlay();
-	//GenerateField();
+	GenerateField();
 
 }
 
