@@ -381,8 +381,6 @@ void AGameField::Discoloration()
 {
 	for (int32 x = 0; x < Size; x++) {
 		for (int32 y = 0; y < Size; y++) {
-			//int32 InX = (*TileMap.Find(FVector2D(x, y)))->TileGridPosition.X;
-			//int32 InY = (*TileMap.Find(FVector2D(x, y)))->TileGridPosition.Y;
 			if ( (x+y) % 2 == 0) {
 				if ((*TileMap.Find(FVector2D(x, y)))->Black) {
 					(*TileMap.Find(FVector2D(x, y)))->StaticMeshComponent->SetMaterial(0, (*TileMap.Find(FVector2D(x, y)))->Black);
@@ -633,7 +631,7 @@ TArray<FVector2D> AGameField::BishopMoves(ENamePiece Nome, int32 proprietario, F
 TArray<FVector2D> AGameField::QueenMoves(ENamePiece Nome, int32 proprietario, FVector2D position, bool FirstMove)
 {
 	TArray<FVector2D> LegalMoves;
-
+	//re-use tower and bishop moves
 	LegalMoves = TowerMoves(Nome, proprietario, position, false);
 	LegalMoves.Append(BishopMoves(Nome, proprietario, position, false));
 
@@ -644,48 +642,55 @@ TArray<FVector2D> AGameField::KingMoves(ENamePiece Nome, int32 proprietario, FVe
 {
 	TArray<FVector2D> LegalMoves;
 
+	//nord direction
 	if (IsValidPosition(FVector2D(position.X + 1, position.Y))) {
 		if ((*TileMap.Find(FVector2D(position.X + 1, position.Y)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X + 1, position.Y)))->PlayerOwner != proprietario) {
 			LegalMoves.Add(FVector2D(position.X + 1, position.Y));
 		}
 	}
-
+	 //south direction
 	if (IsValidPosition(FVector2D(position.X - 1, position.Y))) {
 		if ((*TileMap.Find(FVector2D(position.X - 1, position.Y)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X - 1, position.Y)))->PlayerOwner != proprietario) {
 			LegalMoves.Add(FVector2D(position.X - 1, position.Y));
 		}
 	}
 
+	//est direction
 	if (IsValidPosition(FVector2D(position.X, position.Y+1))) {
 		if ((*TileMap.Find(FVector2D(position.X, position.Y+1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X, position.Y+1)))->PlayerOwner != proprietario) {
 			LegalMoves.Add(FVector2D(position.X, position.Y+1));
 		}
 	}
 
+	//west direction
 	if (IsValidPosition(FVector2D(position.X, position.Y - 1))) {
 		if ((*TileMap.Find(FVector2D(position.X, position.Y - 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X, position.Y - 1)))->PlayerOwner != proprietario) {
 			LegalMoves.Add(FVector2D(position.X, position.Y - 1));
 		}
 	}
 
+	//nord-est direction
 	if (IsValidPosition(FVector2D(position.X+1, position.Y + 1))) {
 		if ((*TileMap.Find(FVector2D(position.X+1, position.Y + 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X+1, position.Y + 1)))->PlayerOwner != proprietario) {
 			LegalMoves.Add(FVector2D(position.X+1, position.Y + 1));
 		}
 	}
 
+	//south-west direction
 	if (IsValidPosition(FVector2D(position.X - 1, position.Y - 1))) {
 		if ((*TileMap.Find(FVector2D(position.X - 1, position.Y - 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X - 1, position.Y - 1)))->PlayerOwner != proprietario) {
 			LegalMoves.Add(FVector2D(position.X - 1, position.Y - 1));
 		}
 	}
 
+	//south-east direction
 	if (IsValidPosition(FVector2D(position.X - 1, position.Y + 1))) {
 		if ((*TileMap.Find(FVector2D(position.X - 1, position.Y + 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X - 1, position.Y + 1)))->PlayerOwner != proprietario) {
 			LegalMoves.Add(FVector2D(position.X - 1, position.Y + 1));
 		}
 	}
 
+	//nord-west direction
 	if (IsValidPosition(FVector2D(position.X + 1, position.Y - 1))) {
 		if ((*TileMap.Find(FVector2D(position.X + 1, position.Y - 1)))->GetTileStatus() == ETileStatus::EMPTY || (*TileMap.Find(FVector2D(position.X + 1, position.Y - 1)))->PlayerOwner != proprietario) {
 			LegalMoves.Add(FVector2D(position.X + 1, position.Y - 1));
@@ -699,11 +704,13 @@ TArray<FVector2D> AGameField::KingMoves(ENamePiece Nome, int32 proprietario, FVe
 void AGameField::Eaten(ABasePiece* Lived, ABasePiece* Dead)
 {
 	ATile* EndTile = *TileMap.Find(FVector2D(Dead->PieceGridPosition));
+	//remove piece form PieceArray
 	for (int32 i = 0; i < PieceArray.Num(); i++) {
 		if (Dead == PieceArray[i]) {
 			PieceArray.Remove(Dead);
 		}
 	}
+	//remove piece from BlackPieceArray if required
 	if (Dead->PlayerOwner == 1) {
 		for (int32 i = 0; i < BlackPieceArray.Num(); i++) {
 			if (Dead == BlackPieceArray[i]) {
@@ -724,7 +731,7 @@ TArray<FVector2D> AGameField::LegalMoves(ABasePiece* Piece)
 
 	for (int32 i = 0; i < IpoteticalMoves.Num(); i++) {
 
-		//simulo la mossa del pezzo che ho preso
+		//simulation of a piece
 		ATile* StartTile = (*TileMap.Find(FVector2D(Piece->PieceGridPosition)));
 		ATile* EndTile = (*TileMap.Find(FVector2D(IpoteticalMoves[i])));
 		ABasePiece* temp = nullptr;
@@ -741,7 +748,7 @@ TArray<FVector2D> AGameField::LegalMoves(ABasePiece* Piece)
 		int32 OtherTileOwner = EndTile->PlayerOwner;
 		SwapTile(Piece, StartTile, EndTile);
 
-		//controllo che non mi crei problemi
+		//check if there are some problems
 		for (int32 j = 0; j < PieceArray.Num(); j++) {
 			if (PieceArray[j]->PlayerOwner != Piece->PlayerOwner) {
 				TArray<FVector2D> EnemyMoves = PieceArray[j]->PossibleMoves();
@@ -752,12 +759,14 @@ TArray<FVector2D> AGameField::LegalMoves(ABasePiece* Piece)
 			}
 		}
 
+		//go back to old situation
 		RollBack(Piece, EndTile, StartTile, OtherTileOwner);
 		if (temp != nullptr) {
 			PieceArray.Add(temp);
 		}
 	}
 
+	//delete all non-legal moves
 	for (int32 i = 0; i < IpoteticalMoves.Num(); i++) {
 		if (IpoteticalMoves[i] != FVector2D(-1, -1)) Legal.Add(IpoteticalMoves[i]);
 	}
@@ -766,9 +775,12 @@ TArray<FVector2D> AGameField::LegalMoves(ABasePiece* Piece)
 }
 
 bool AGameField::isCheckMate(int32 Player)
-{
+{	
+	//if any piece is able to do almost one legal moves, the player is in checkmate situation
 	for (int32 i = 0; i < PieceArray.Num(); i++) {
+		//Take a piece
 		if (PieceArray[i]->PlayerOwner == Player) {
+			//calculate a legal moves
 			if (!LegalMoves(PieceArray[i]).IsEmpty()) {
 				return false;
 			}
@@ -781,7 +793,8 @@ void AGameField::Promotion(ABasePiece* Piece)
 {
 	if (Piece->PieceGridPosition.X == Size - 1 || Piece->PieceGridPosition.X == 0) {
 		FVector Location = AGameField::GetRelativeLocationByXYPosition(Piece->PieceGridPosition.X, Piece->PieceGridPosition.Y);
-			
+		
+		//spawn a queen
 		ABasePiece* NewQueen;
 		NewQueen = GetWorld()->SpawnActor<AQueen>(QueenClass, Location, FRotator(0.0f, 90.0f, 0.0f));
 		const float PieceScale = TileSize / 100;
@@ -796,11 +809,13 @@ void AGameField::Promotion(ABasePiece* Piece)
 		NewQueen->GameField = this;
 		PieceArray.Add(NewQueen);
 
+		//Update PieceArray
 		for (int32 i = 0; i < PieceArray.Num(); i++) {
 			if (Piece == PieceArray[i]) {
 				PieceArray.Remove(Piece);
 			}
 		}
+		//Update BlackPieceArray
 		if (Piece->PlayerOwner == 1) {
 			for (int32 i = 0; i < BlackPieceArray.Num(); i++) {
 				if (Piece == BlackPieceArray[i]) {
@@ -814,14 +829,4 @@ void AGameField::Promotion(ABasePiece* Piece)
 }
 
 
-
-
-
-
-// Called every frame
-//void AGameField::Tick(float DeltaTime)
-//{
-	//Super::Tick(DeltaTime);
-
-//}
 

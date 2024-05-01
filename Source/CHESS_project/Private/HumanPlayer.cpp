@@ -95,8 +95,7 @@ void AHumanPlayer::OnClick()
 
 				if (CurrPiece->PlayerOwner == GameMode->CurrentPlayer) {
 					TempPiece = CurrPiece;
-					//TempMoves = TempPiece->PossibleMoves();
-					//faccio il controllo e tolgo le mosse che potrebbero mettere in scacco il re
+					//check and delete all moves which could put the king in a mate situation
 					TempMoves = FindLegalMoves(TempPiece);
 					CurrPiece->GameField->PaintTiles(TempMoves);
 
@@ -152,7 +151,7 @@ void AHumanPlayer::OnClick()
 }
 
 void AHumanPlayer::UpdateTiles(ABasePiece* Piece, ATile* Tile) {
-	//devo aggiornare lo status, il playerOwner
+	//i have update the status and the playerOwner
 	AGameField* GameField = Piece->GameField;
 	GameField->Update(Piece, Tile);
 

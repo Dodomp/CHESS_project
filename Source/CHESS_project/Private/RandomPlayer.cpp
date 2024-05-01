@@ -49,25 +49,24 @@ void ARandomPlayer::OnTurn()
 					ABasePiece* Piece;
 
 					do {
-						//TO DO: estri finche non ne trovi uno con almeno una mossa valida
-						//estraggo a caso un pezzo nero
+						// Keep extracting moves randomly until finding a valid one
+						// Randomly extract a black piece
 						Piece = GetRandomBlackPiece(GameMode);
 
-						//calcolo tutte le mosse del pezzo nero
+						// Calculate all moves for the black piece
 						Moves = GField->LegalMoves(Piece);
 
 					} while (Piece != nullptr && Moves.IsEmpty());
 
 
-					//estreaggo casualmene una mossa valida
-					//coloro le mosse
+					// Randomly extract a valid move
+					// Color the moves
 					GField->PaintTiles(Moves);
 
 					FVector2D EndTile = GetRandomMove(Moves);
 					FVector EndPosition = GField->GetRelativeLocationByXYPosition(EndTile.X, EndTile.Y);
 
 					if (GField->TileMap.FindRef(FVector2D(EndTile))->Status == ETileStatus::OCCUPIED) {
-						//ATile* Dead = GField->TileMap.FindRef(FVector2D(EndTile));
 						ABasePiece* Dead = nullptr;
 						for (int32 i = 0; i < GField->PieceArray.Num(); i++) {
 							if (GField->PieceArray[i]->PieceGridPosition == EndTile) {
@@ -131,17 +130,17 @@ void ARandomPlayer::OnLose()
 
 ABasePiece* ARandomPlayer::GetRandomBlackPiece(ACHESS_GameMode* GameMode)
 {
-	// Assume che BlackPieceArray sia un TArray di tipo desiderato (ad es. TArray<int32> o TArray<classname>)
-	// Deve essere accessibile da questo contesto (ad es. dichiarato come membro di classe)
+	// Assume BlackPieceArray is a TArray of the desired type (e.g., TArray<int32> or TArray<classname>)
+	// It must be accessible from this context (e.g., declared as a class member)
 	TArray<ABasePiece*> Black = GameMode->GField->BlackPieceArray;
 
-	// Verifica se l'array non è vuoto
+	// Check if the array is not empty
 	if (Black.Num() > 0)
 	{
-		// Genera un indice casuale all'interno del range dell'array
+		// Generate a random index within the range of the array
 		int32 RandomIndex = FMath::RandRange(0, Black.Num() - 1);
 
-		// Accedi all'elemento casuale
+		// Access the random element
 		return Black[RandomIndex];
 	}
 	else
@@ -153,10 +152,10 @@ ABasePiece* ARandomPlayer::GetRandomBlackPiece(ACHESS_GameMode* GameMode)
 
 FVector2D ARandomPlayer::GetRandomMove(TArray<FVector2D> Moves)
 {
-		// Genera un indice casuale all'interno del range dell'array
+		// Generate a random index within the array's range
 		int32 RandomIndex = FMath::RandRange(0, Moves.Num() - 1);
 
-		// Accedi all'elemento casuale
+		// Access the random element
 		return Moves[RandomIndex];
 }
 
